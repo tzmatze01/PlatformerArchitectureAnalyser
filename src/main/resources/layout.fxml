@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.layout.*?>
+
+
+<BorderPane maxHeight="800.0" maxWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.CustomController">
+
+    <top>
+        <HBox>
+            <ComboBox fx:id="cbRaster" onAction="#chooseRasterSize" prefWidth="150.0" promptText="Choose Rastersize" />
+            <Button fx:id="bConfirm" onAction="#buttton_clicked"></Button>
+        </HBox>
+
+    </top>
+    <center >
+        <Canvas fx:id="canvas" />
+    </center>
+
+</BorderPane>
