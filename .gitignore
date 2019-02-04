@@ -1,0 +1,8 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# do not upload images in this folder
+/src/main/images/*
