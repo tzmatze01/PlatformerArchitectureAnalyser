@@ -2,13 +2,49 @@ package main.controller;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 
-public class CustomController {
+public class CustomController implements Initializable {
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        bConfirm.setText("Click me!");
+
+        cbRaster.setItems(FXCollections.observableArrayList(MenuEntries.values()));
+
+        cMap = new Canvas(canvasWidth, canvasHeight);
+        cSemMap = new Canvas(canvasWidth, canvasHeight);
+
+        //cMap.setHeight(canvasHeight);
+        //cMap.setWidth(canvasWidth);
+        //cSemMap.setHeight(canvasHeight);
+        //cSemMap.setWidth(canvasWidth);
+
+
+        gcMap = cMap.getGraphicsContext2D();
+        gcSemMap = cSemMap.getGraphicsContext2D();
+
+        gcMap.setStroke(Color.RED);
+
+        gcMap.moveTo(100, 0);
+        gcMap.lineTo(100, 50);
+        gcMap.stroke();
+
+        gcMap.setFill(Color.BLACK);
+        gcMap.fillRect(50, 50, 100, 100);
+    }
 
     private enum MenuEntries {
         R8x8("8x8"),
@@ -26,13 +62,26 @@ public class CustomController {
         }
     }
 
-    private int canvasHeight = 300;
-    private int canvasWidth = 400;
+    private final int canvasHeight = 300;
+    private final int canvasWidth = 400;
 
-    private GraphicsContext gc;
+    private GraphicsContext gcMap;
+    private GraphicsContext gcSemMap;
 
     @FXML
-    private Canvas canvas;
+    private StackPane spMap;
+
+    @FXML
+    private StackPane spSemMap;
+
+    @FXML
+    private Canvas cMap;
+
+    @FXML
+    private Canvas cSemMap;
+
+    @FXML
+    private ImageView ivMap;
 
     @FXML
     private Button bConfirm;
@@ -40,6 +89,7 @@ public class CustomController {
     @FXML
     private ComboBox cbRaster;
 
+    /*
     @FXML
     public void initialize()
     {
@@ -47,12 +97,29 @@ public class CustomController {
 
         cbRaster.setItems(FXCollections.observableArrayList(MenuEntries.values()));
 
-        canvas.setHeight(canvasHeight);
-        canvas.setWidth(canvasWidth);
+        cMap = new Canvas(canvasWidth, canvasHeight);
+        cSemMap = new Canvas(canvasWidth, canvasHeight);
 
-        gc = canvas.getGraphicsContext2D();
+        //cMap.setHeight(canvasHeight);
+        //cMap.setWidth(canvasWidth);
+        //cSemMap.setHeight(canvasHeight);
+        //cSemMap.setWidth(canvasWidth);
+
+        gcMap = cMap.getGraphicsContext2D();
+        gcSemMap = cSemMap.getGraphicsContext2D();
+
+        gcMap.setStroke(Color.RED);
+
+        gcMap.moveTo(100, 0);
+        gcMap.lineTo(100, 50);
+        gcMap.stroke();
+
+        gcMap.setFill(Color.BLACK);
+        gcMap.fillRect(50, 50, 100, 100);
+
+
     }
-
+    */
     @FXML
     private void chooseRasterSize()
     {
@@ -61,15 +128,33 @@ public class CustomController {
         System.out.println("new val: "+cbRaster.getValue());
     }
 
+    /*
+        TODO: versetztes Raster
+        TODO: merken von tiles und auf näcshtes Rasterbild anwenden -> store num RGB pixels in raster and check every other
+     */
+
     @FXML
-    private void buttton_clicked()
+    private void loadNextImage()
     {
-        // TODO button clicked
         System.out.println("button clicked!");
+
+        Image img = new Image(getClass().getResource("../images/test.png").toExternalForm());
+        ivMap.setImage(img);
+    }
+
+    @FXML
+    private void loadNextRasterTile()
+    {
+
     }
 
     private void cropImage()
     {
         // TODO check if image width and height are % raster == 0 -> crop on sides that do not eval 0
+    }
+
+    private void drawRaster()
+    {
+
     }
 }
