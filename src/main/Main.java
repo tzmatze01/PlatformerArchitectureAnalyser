@@ -18,6 +18,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         BorderPane root = FXMLLoader.load(getClass().getResource("/main/resources/layout.fxml"));
+
         primaryStage.setTitle("Architecture Analyser");
 
         primaryStage.setScene(new Scene(root, 1000, 800));
