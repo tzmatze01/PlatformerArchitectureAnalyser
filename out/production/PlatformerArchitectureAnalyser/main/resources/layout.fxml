@@ -25,6 +25,8 @@
             <HBox>
                 <ComboBox fx:id="cbGameElement" onAction="#changeGameElem" prefWidth="150.0" promptText="Choose Game Elem" />
                 <Button fx:id="bNextTile" onAction="#loadNextTile"></Button>
+                <Button fx:id="bPreviousTile" onAction="#loadPreviousTile"></Button>
+                <Button fx:id="bFirstTile" onAction="#loadFirstTile"></Button>
             </HBox>
         </VBox>
 

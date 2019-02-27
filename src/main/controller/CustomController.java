@@ -53,6 +53,12 @@ public class CustomController implements Initializable {
     private Button bNextTile;
 
     @FXML
+    private Button bPreviousTile;
+
+    @FXML
+    private Button bFirstTile;
+
+    @FXML
     private ComboBox cbRaster;
 
     @FXML
@@ -63,18 +69,14 @@ public class CustomController implements Initializable {
 
         currWStepPos = 0;
 
-        // init canvasas and add to stackpanes for overlay grid
-        cMap = new Canvas(canvasWidth, canvasHeight);
-        cSemMap = new Canvas(canvasWidth, canvasHeight);
-
-        spMap.getChildren().add(cMap);
-        spSemMap.getChildren().add(cSemMap);
-
         bNextMap.setText("Next Map");
-        bNextTile.setText("Next Tile");
+        bNextTile.setText("Load Next Tile");
+        bPreviousTile.setText("Load Previous Tile");
+        bFirstTile.setText("Load First Tile");
 
         cbRaster.setItems(FXCollections.observableArrayList(RasterMenuEntries.values()));
         cbRaster.getSelectionModel().selectFirst();
+
 
         cbGameElement.setItems(FXCollections.observableArrayList(GameElemMenuEntries.values()));
         cbGameElement.getSelectionModel().selectFirst();
@@ -106,22 +108,22 @@ public class CustomController implements Initializable {
         // TODO load next image from folder
         currDispImg = new Image(getClass().getResource("../images/test.png").toExternalForm());
 
-        //ivMap.setImage(img);
+        // canvases need to be initiaised for every new iage, to fit proportions of img
+        initCanvases();
 
-
-        //System.out.println("wImg H "+wImage.getHeight());
-        //System.out.println("wImg W "+wImage.getWidth());
-
-        //ivSemMap.setImage(wImage);
-
-        loadNextRasterTile();
-        //drawRaster();
+        if(ivMap.getImage() == null)
+            loadNextTile();
     }
 
-    @FXML
-    private void loadNextRasterTile()
-    {
 
+    private void initCanvases()
+    {
+        // init canvasas and add to stackpanes for overlay grid
+        cMap = new Canvas(currDispImg.getHeight(), currDispImg.getHeight());
+        cSemMap = new Canvas(currDispImg.getHeight(), currDispImg.getHeight());
+
+        spMap.getChildren().add(cMap);
+        spSemMap.getChildren().add(cSemMap);
     }
 
     private void cropImage()
@@ -136,12 +138,55 @@ public class CustomController implements Initializable {
     }
 
     @FXML
-    private void loadNextTile()
+    private void loadFirstTile()
+    {
+        //if(ivMap.getImage() != null) {
+
+            int height = (int) currDispImg.getHeight();
+
+            currWStepPos = 0;
+
+            loadTile(height, currWStepPos, (currWStepPos + height));
+
+            currWStepPos += height;
+        //}
+    }
+
+    @FXML
+    private void loadPreviousTile()
     {
         int height = (int) currDispImg.getHeight();
 
-        // new subimage is not out of width of orig image
+        if((currWStepPos - height) >= 0) {
+
+            int start = currWStepPos - height;
+
+            loadTile(height, start, currWStepPos);
+            currWStepPos -= height;
+        }
+    }
+
+    @FXML
+    private void loadNextTile()
+    {
+        //System.out.println();
+        //System.out.println("currWStepPos: "+currWStepPos);
+
+        int height = (int) currDispImg.getHeight();
+
         if((currWStepPos + height) <= currDispImg.getWidth()) {
+
+            loadTile(height, currWStepPos, (currWStepPos + height));
+            currWStepPos += height;
+        }
+    }
+    private void loadTile(int height, int xStart, int xEnd)
+    {
+        System.out.println();
+        System.out.println("startX: "+ xStart + " xEnd: "+xEnd);
+
+        // new subimage is not out of width of orig image
+       // if (xEnd <= currDispImg.getWidth()) {
 
             PixelReader pixelReader = currDispImg.getPixelReader();
 
@@ -151,10 +196,10 @@ public class CustomController implements Initializable {
 
             // Determine the color of each pixel in a specified row
             for (int readY = 0; readY < height; readY++) {
-                for (int readX = currWStepPos; readX < (currWStepPos + height); readX++) {
+                for (int readX = xStart; readX < xEnd; readX++) {
 
                     Color color = pixelReader.getColor(readX, readY);
-                    int pwX = readX - currWStepPos;
+                    int pwX = readX - xStart;
 
                     // Now write a brighter color to the PixelWriter.
                     color = color.brighter();
@@ -162,47 +207,35 @@ public class CustomController implements Initializable {
                 }
             }
 
-
-            currWStepPos += height;
+            //currWStepPos += height;
 
             ivMap.setImage(croppedImg);
             ivSemMap.setImage(croppedImg);
-        }
-        else
-            System.out.println("Loaded image is put of bounds!");
+
+            drawRaster();
+
+            //} else
+         //   System.out.println("Tile image is of bounds of original image!");
     }
+
 
     @FXML
     private void drawRaster()
     {
-        GraphicsContext gcMap = cMap.getGraphicsContext2D();
-        GraphicsContext gcSemMap = cSemMap.getGraphicsContext2D();
-
-        gcMap.setStroke(Color.RED);
-        gcSemMap.setStroke(Color.RED);
-
-        int rasterSize = 0;
-
-
-        if(cbRaster.getValue().toString().matches(RasterMenuEntries.R8x8.toString())) {
-            rasterSize = 8;
-        }
-        else if(cbRaster.getValue().toString().matches(RasterMenuEntries.R16x16.toString())) {
-            rasterSize = 16;
-        }
-        else if(cbRaster.getValue().toString().matches(RasterMenuEntries.R32x32.toString())) {
-            rasterSize = 32;
-        }
-
-
         if(ivMap.getImage() != null) {
+
+            GraphicsContext gcMap = cMap.getGraphicsContext2D();
+            GraphicsContext gcSemMap = cSemMap.getGraphicsContext2D();
+
+            gcMap.setStroke(Color.RED);
+            gcSemMap.setStroke(Color.RED);
 
             // TODO canvas at wrong position?
 
             int imageHeight = (int) ivMap.getImage().getHeight();
             int imageWidth = (int) ivMap.getImage().getWidth();
 
-            int step = imageHeight / rasterSize;
+            int step = imageHeight / getRasterSize();
 
             System.out.println("img height: " + imageHeight);
 
@@ -216,7 +249,7 @@ public class CustomController implements Initializable {
             gcSemMap.moveTo(0,0);
 
             // horizontal lines
-            for(int i = 0; i < imageHeight; i += step)
+            for(int i = 0; i <= imageHeight; i += step)
             {
                 gcMap.moveTo(0, i);
                 gcSemMap.moveTo(0, i);
@@ -230,7 +263,7 @@ public class CustomController implements Initializable {
 
 
             // vertical lines
-            for(int i = 0; i < imageWidth; i += step)
+            for(int i = 0; i <= imageWidth; i += step)
             {
                 gcMap.moveTo(i, 0);
                 gcSemMap.moveTo(i, 0);
@@ -245,7 +278,22 @@ public class CustomController implements Initializable {
             gcMap.closePath();
             gcSemMap.closePath();
         }
+    }
 
+    public int getRasterSize()
+    {
+        int rasterSize = 0;
 
+        if(cbRaster.getValue().toString().matches(RasterMenuEntries.R8x8.toString())) {
+            rasterSize = 8;
+        }
+        else if(cbRaster.getValue().toString().matches(RasterMenuEntries.R16x16.toString())) {
+            rasterSize = 16;
+        }
+        else if(cbRaster.getValue().toString().matches(RasterMenuEntries.R32x32.toString())) {
+            rasterSize = 32;
+        }
+
+        return rasterSize;
     }
 }
