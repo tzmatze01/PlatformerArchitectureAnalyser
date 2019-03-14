@@ -12,7 +12,9 @@ import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import main.computation.GameElemMenuEntries;
+import main.computation.RasterManager;
 import main.computation.RasterSizeMenuEntries;
 
 import java.net.URL;
@@ -25,8 +27,11 @@ public class CustomController implements Initializable {
     //private final int canvasHeight = 300;
     //private final int canvasWidth = 400;
 
+    private RasterManager rasterManager;
+
     private Image currDispImg;
     private int currWStepPos;
+    private double rasterBoxSide;
 
     private GraphicsContext gcMap;
     private GraphicsContext gcSemMap;
@@ -82,6 +87,8 @@ public class CustomController implements Initializable {
         cbGameElement.getSelectionModel().selectFirst();
 
         drawRaster();
+
+        rasterManager = new RasterManager(getRasterSize());
     }
 
 
@@ -113,6 +120,8 @@ public class CustomController implements Initializable {
         cMap = new Canvas(currDispImg.getHeight(), currDispImg.getHeight());
         cSemMap = new Canvas(currDispImg.getHeight(), currDispImg.getHeight());
 
+        rasterBoxSide = cMap.getHeight() / getRasterSize();
+
         spMap.getChildren().add(cMap);
         spSemMap.getChildren().add(cSemMap);
 
@@ -131,9 +140,10 @@ public class CustomController implements Initializable {
         int rbX = (int ) (x / rasterBoxSide);
         int rbY = (int ) (y / rasterBoxSide);
 
-        System.out.println("raster: "+ getRasterSize());
-        System.out.println("x: "+ x + " y: "+ y);
-        System.out.println("rbX: "+ rbX+ " rbY: "+rbY);
+        rasterManager.addCharForRasterBox(rbX, rbY, '-'); // TODO char from selection
+
+        drawRaster();
+        drawSemanticMap();
     }
 
     private void cropImage()
@@ -223,14 +233,38 @@ public class CustomController implements Initializable {
             //currWStepPos += height;
 
             ivMap.setImage(croppedImg);
-            ivSemMap.setImage(croppedImg);
+            //ivSemMap.setImage(croppedImg);
+
+            rasterManager.setTile(croppedImg);
 
             drawRaster();
+            drawSemanticMap();
 
             //} else
          //   System.out.println("Tile image is of bounds of original image!");
     }
 
+    private void drawSemanticMap()
+    {
+        GraphicsContext gcSemMap = cSemMap.getGraphicsContext2D();
+
+        gcSemMap.setStroke(Color.RED);
+        gcSemMap.beginPath();
+
+        char[][] semanticMap = rasterManager.getCharRepresentation();
+
+        for(int i = 0; i < semanticMap.length; ++i)
+        {
+            for(int j = 0; j < semanticMap.length; ++j)
+            {
+                int x = (int) ((i * rasterBoxSide) - (rasterBoxSide / 2));
+                int y = (int) ((j * rasterBoxSide) - (rasterBoxSide / 2));
+
+                gcSemMap.strokeText(""+semanticMap[i][j], x, y);
+            }
+        }
+        gcSemMap.closePath();
+    }
 
     @FXML
     private void drawRaster()
@@ -251,10 +285,6 @@ public class CustomController implements Initializable {
             int imageHeight = (int) ivMap.getImage().getHeight();
             int imageWidth = (int) ivMap.getImage().getWidth();
 
-            int step = imageHeight / getRasterSize();
-
-            System.out.println("img height: " + imageHeight);
-
             gcMap.beginPath();
             gcSemMap.beginPath();
 
@@ -265,7 +295,7 @@ public class CustomController implements Initializable {
             gcSemMap.moveTo(0,0);
 
             // horizontal lines
-            for(int i = 0; i <= imageHeight; i += step)
+            for(int i = 0; i <= imageHeight; i += rasterBoxSide)
             {
                 gcMap.moveTo(0, i);
                 gcSemMap.moveTo(0, i);
@@ -279,7 +309,7 @@ public class CustomController implements Initializable {
 
 
             // vertical lines
-            for(int i = 0; i <= imageWidth; i += step)
+            for(int i = 0; i <= imageWidth; i += rasterBoxSide)
             {
                 gcMap.moveTo(i, 0);
                 gcSemMap.moveTo(i, 0);

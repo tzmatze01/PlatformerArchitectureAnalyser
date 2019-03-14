@@ -21,17 +21,17 @@ public class RasterManager {
     private int tileSideLength;
     private int rasterBoxSideLength;
 
-    public RasterManager(int rasterSize, Image tile)
+    public RasterManager(int rasterSize) //, Image tile)
     {
         this.rasterSize = rasterSize;
-        this.tile = tile;
+        //this.tile = tile;
         this.rasterboxCharMap = new HashMap<>();
         this.charRepresentation = new char[rasterSize][rasterSize];
 
-        this.pixelReader = tile.getPixelReader();
+        //this.pixelReader = tile.getPixelReader();
 
-        this.tileSideLength = (int) tile.getWidth();
-        this.rasterBoxSideLength = tileSideLength / rasterSize;
+        //this.tileSideLength = (int) tile.getWidth();
+        //this.rasterBoxSideLength = tileSideLength / rasterSize;
     }
 
     // TODO set rasterSize() -> calls setTile()
@@ -93,6 +93,8 @@ public class RasterManager {
     {
         int hash = analyseRasterBox(x, y);
 
+        System.out.println("x: "+ x + " y: "+ y +" hash: "+hash);
+        
         rasterboxCharMap.put(hash, c);
         charRepresentation[x][y] = c;
 
