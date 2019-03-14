@@ -2,12 +2,13 @@ package main.computation;
 
 public enum GameElemMenuEntries {
 
-    FLoor("Floor"),
-    PLatform("Platform"),
+    Floor("Floor"),
+    Platform("Platform"),
     Enemy("Enemy"),
     Hole("Hole");
 
     private String name;
+    // TODO private char displayChar;
 
     GameElemMenuEntries(String name)
     {

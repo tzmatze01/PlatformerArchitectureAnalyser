@@ -13,7 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import main.computation.GameElemMenuEntries;
-import main.computation.RasterMenuEntries;
+import main.computation.RasterSizeMenuEntries;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -22,8 +22,8 @@ import java.util.ResourceBundle;
 public class CustomController implements Initializable {
 
 
-    private final int canvasHeight = 300;
-    private final int canvasWidth = 400;
+    //private final int canvasHeight = 300;
+    //private final int canvasWidth = 400;
 
     private Image currDispImg;
     private int currWStepPos;
@@ -74,26 +74,17 @@ public class CustomController implements Initializable {
         bPreviousTile.setText("Load Previous Tile");
         bFirstTile.setText("Load First Tile");
 
-        cbRaster.setItems(FXCollections.observableArrayList(RasterMenuEntries.values()));
+        cbRaster.setItems(FXCollections.observableArrayList(RasterSizeMenuEntries.values()));
         cbRaster.getSelectionModel().selectFirst();
 
 
         cbGameElement.setItems(FXCollections.observableArrayList(GameElemMenuEntries.values()));
         cbGameElement.getSelectionModel().selectFirst();
 
-        ivMap.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle(MouseEvent event) {
-
-                System.out.println("x: "+event.getSceneX()+ " y: "+event.getSceneY());
-                System.out.println("x 2: "+event.getX()+ " y 2: "+event.getY());
-
-            }
-        });
-
         drawRaster();
     }
+
+
 
     /*
         TODO: versetztes Raster
@@ -124,6 +115,25 @@ public class CustomController implements Initializable {
 
         spMap.getChildren().add(cMap);
         spSemMap.getChildren().add(cSemMap);
+
+        cMap.setOnMousePressed(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                identifyRasterBox(event.getX(), event.getY());
+            }
+        });
+    }
+
+    private void identifyRasterBox(double x, double y)
+    {
+        double rasterBoxSide = cMap.getHeight() / getRasterSize();
+        int rbX = (int ) (x / rasterBoxSide);
+        int rbY = (int ) (y / rasterBoxSide);
+
+        System.out.println("raster: "+ getRasterSize());
+        System.out.println("x: "+ x + " y: "+ y);
+        System.out.println("rbX: "+ rbX+ " rbY: "+rbY);
     }
 
     private void cropImage()
@@ -159,9 +169,12 @@ public class CustomController implements Initializable {
 
         if((currWStepPos - height) >= 0) {
 
-            int start = currWStepPos - height;
+            //int start = currWStepPos - height;
 
-            loadTile(height, start, currWStepPos);
+            // TODO problem is marker after loading tile -> new marker in the middle of the picture ?
+            //currWStepPos -= height;
+
+            loadTile(height, (currWStepPos - height), currWStepPos);
             currWStepPos -= height;
         }
     }
@@ -227,6 +240,9 @@ public class CustomController implements Initializable {
             GraphicsContext gcMap = cMap.getGraphicsContext2D();
             GraphicsContext gcSemMap = cSemMap.getGraphicsContext2D();
 
+            gcMap.clearRect(0,0, cMap.getWidth(), cMap.getHeight());
+            gcSemMap.clearRect(0,0, cSemMap.getWidth(), cSemMap.getWidth());
+
             gcMap.setStroke(Color.RED);
             gcSemMap.setStroke(Color.RED);
 
@@ -284,13 +300,13 @@ public class CustomController implements Initializable {
     {
         int rasterSize = 0;
 
-        if(cbRaster.getValue().toString().matches(RasterMenuEntries.R8x8.toString())) {
+        if(cbRaster.getValue().toString().matches(RasterSizeMenuEntries.R8x8.toString())) {
             rasterSize = 8;
         }
-        else if(cbRaster.getValue().toString().matches(RasterMenuEntries.R16x16.toString())) {
+        else if(cbRaster.getValue().toString().matches(RasterSizeMenuEntries.R16x16.toString())) {
             rasterSize = 16;
         }
-        else if(cbRaster.getValue().toString().matches(RasterMenuEntries.R32x32.toString())) {
+        else if(cbRaster.getValue().toString().matches(RasterSizeMenuEntries.R32x32.toString())) {
             rasterSize = 32;
         }
 

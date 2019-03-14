@@ -1,7 +1,7 @@
 package main.computation;
 
 
-public enum RasterMenuEntries {
+public enum RasterSizeMenuEntries {
 
     R8x8("8x8", 8),
     R16x16("16x16", 16),
@@ -10,7 +10,7 @@ public enum RasterMenuEntries {
     private final String name;
     private final int raster;
 
-    RasterMenuEntries(String s, int r) {
+    RasterSizeMenuEntries(String s, int r) {
 
         name = s;
         raster = r;
