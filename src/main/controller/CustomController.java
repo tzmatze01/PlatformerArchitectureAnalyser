@@ -252,15 +252,17 @@ public class CustomController implements Initializable {
         gcSemMap.beginPath();
 
         char[][] semanticMap = rasterManager.getCharRepresentation();
+        // System.out.println("sem map length: "+semanticMap.length);
 
-        for(int i = 0; i < semanticMap.length; ++i)
+        for(int i = 0; i < semanticMap.length; i++)
         {
-            for(int j = 0; j < semanticMap.length; ++j)
+            for(int j = 0; j < semanticMap.length; j++)
             {
-                int x = (int) ((i * rasterBoxSide) - (rasterBoxSide / 2));
-                int y = (int) ((j * rasterBoxSide) - (rasterBoxSide / 2));
+                int x = (int) ((j * rasterBoxSide) + (rasterBoxSide / 2));
+                int y = (int) ((i * rasterBoxSide) + (rasterBoxSide / 2));
 
-                gcSemMap.strokeText(""+semanticMap[i][j], x, y);
+                System.out.println("x: "+ x +" y: "+y +" i: "+i+" j: "+j);
+                gcSemMap.strokeText(""+semanticMap[j][i], y, x);
             }
         }
         gcSemMap.closePath();
