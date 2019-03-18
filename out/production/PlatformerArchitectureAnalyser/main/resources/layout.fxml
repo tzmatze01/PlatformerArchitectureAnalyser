@@ -1,47 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.layout.*?>
-
-
 <?import javafx.scene.image.ImageView?>
-<?import javafx.geometry.Insets?>
-<BorderPane maxHeight="800.0" maxWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.CustomController">
+<BorderPane styleClass="header-section" maxHeight="800.0" maxWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.CustomController">
 
 
     <top>
+        <HBox id="controls">
+            <VBox styleClass="vbox">
+                <Label styleClass="label" text="Image Controls"/>
+                <HBox>
+                    <ComboBox fx:id="cbRaster" onAction="#changeRaster" prefWidth="150.0" promptText="Choose Rastersize" />
+                    <Button fx:id="bNextMap" onAction="#loadNextImage"></Button>
+                </HBox>
+            </VBox>
 
-        <VBox>
-            <HBox>
-                <ComboBox fx:id="cbRaster" onAction="#drawRaster" prefWidth="150.0" promptText="Choose Rastersize" />
-                <Button fx:id="bNextMap" onAction="#loadNextImage"></Button>
-            </HBox>
+            <VBox styleClass="vbox">
+                <Label styleClass="label" text="Tile Actions"/>
+                <HBox>
+                    <Button fx:id="bNextTile" onAction="#loadNextTile"></Button>
+                    <Button fx:id="bPreviousTile" onAction="#loadPreviousTile"></Button>
+                    <Button fx:id="bFirstTile" onAction="#loadFirstTile"></Button>
+                </HBox>
+            </VBox>
 
-            <HBox>
-                <ComboBox fx:id="cbGameElement" onAction="#changeGameElem" prefWidth="150.0" promptText="Choose Game Elem" />
-                <Button fx:id="bNextTile" onAction="#loadNextTile"></Button>
-                <Button fx:id="bPreviousTile" onAction="#loadPreviousTile"></Button>
-                <Button fx:id="bFirstTile" onAction="#loadFirstTile"></Button>
-            </HBox>
-        </VBox>
+            <VBox styleClass="vbox">
+                <Label styleClass="label" text="Char Actions"/>
+                <HBox>
+                    <ComboBox fx:id="cbGameElement"  prefWidth="150.0" promptText="Choose Game Elem" />
+                    <ComboBox fx:id="cbAction"  prefWidth="150.0" promptText="Choose Action" />
+                </HBox>
+            </VBox>
+        </HBox>
 
     </top>
     <center >
 
-        <!-- to print map and semantic map below -->
         <VBox>
-            <StackPane fx:id="spMap">
-                <!--Canvas fx:id="cMap" /-->
+            <StackPane fx:id="spMap" id="spMap">
                 <ImageView fx:id="ivMap"/>
             </StackPane>
 
-            <StackPane fx:id="spSemMap">
-                <!--Canvas fx:id="cSemMap" /-->
+            <StackPane fx:id="spSemMap" id="spSemMap">
                 <ImageView fx:id="ivSemMap"/>
             </StackPane>
         </VBox>
@@ -52,9 +53,9 @@
     </bottom>
 
 
-    <right>
+    <bottom>
         <!-- to print log output -->
         <TextField fx:id="tfLog"/>
 
-    </right>
+    </bottom>
 </BorderPane>

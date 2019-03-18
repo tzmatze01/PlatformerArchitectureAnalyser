@@ -1,0 +1,34 @@
+.header-section {
+    -fx-padding: 10px;
+    -fx-font-size: 10px;
+    -fx-alignment: center;
+}
+
+.label {
+    -fx-padding: 10px;
+    -fx-font-size: 20px;
+    -fx-font-style: oblique;
+}
+
+.description {
+    -fx-font-size: 10px;
+    -fx-font-style: italic;
+}
+
+#spMap {
+    -fx-padding: 50 10 10 10;
+}
+
+#spSemMap {
+
+    -fx-padding: 30 10 10 10;
+}
+
+.vbox {
+    -fx-alignment: center;
+    -fx-padding: 0 15 15 10;
+}
+
+#controls {
+    -fx-alignment: center;
+}

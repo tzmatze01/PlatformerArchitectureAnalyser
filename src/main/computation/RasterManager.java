@@ -29,10 +29,21 @@ public class RasterManager {
         this.rasterboxCharMap = new HashMap<>();
         this.charRepresentation = new char[rasterSize][rasterSize];
 
-        charHashMap = new int[rasterSize][rasterSize];
+        this.charHashMap = new int[rasterSize][rasterSize];
     }
 
     // TODO set rasterSize() -> calls setTile()
+
+    public void setRasterSize(int rasterSize)
+    {
+        this.rasterSize = rasterSize;
+        this.rasterBoxSideLength = tileSideLength / rasterSize;
+
+        this.charRepresentation = new char[rasterSize][rasterSize];
+        this.charHashMap = new int[rasterSize][rasterSize];
+
+        analyseTile();
+    }
 
     public Image getTile() {
         return tile;
@@ -47,11 +58,10 @@ public class RasterManager {
 
         this.charRepresentation = new char[rasterSize][rasterSize];
 
+        this.charHashMap = new int[rasterSize][rasterSize];
 
-        charHashMap = new int[rasterSize][rasterSize];
-
-        System.out.println("tilesidelength:" + tileSideLength);
-        System.out.println("rbSideLength:" + rasterBoxSideLength);
+        //System.out.println("tilesidelength:" + tileSideLength);
+        //System.out.println("rbSideLength:" + rasterBoxSideLength);
 
         analyseTile();
     }

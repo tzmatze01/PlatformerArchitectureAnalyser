@@ -8,14 +8,15 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import main.computation.GameElemMenuEntries;
+import main.enums.CharActionsMenuEntries;
+import main.enums.GameElemMenuEntries;
 import main.computation.RasterManager;
-import main.computation.RasterSizeMenuEntries;
+import main.enums.RasterSizeMenuEntries;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -69,6 +70,12 @@ public class CustomController implements Initializable {
     @FXML
     private ComboBox cbGameElement;
 
+    @FXML
+    private ComboBox cbAction;
+
+    @FXML
+    private TextField tfLog;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -85,6 +92,9 @@ public class CustomController implements Initializable {
 
         cbGameElement.setItems(FXCollections.observableArrayList(GameElemMenuEntries.values()));
         cbGameElement.getSelectionModel().selectFirst();
+
+        cbAction.setItems(FXCollections.observableArrayList(CharActionsMenuEntries.values()));
+        cbAction.getSelectionModel().selectFirst();
 
         drawRaster();
 
@@ -140,10 +150,33 @@ public class CustomController implements Initializable {
         int rbX = (int ) (x / rasterBoxSide);
         int rbY = (int ) (y / rasterBoxSide);
 
-        rasterManager.addCharForRasterBox(rbX, rbY, '-'); // TODO char from selection
+        if(cbAction.getValue().toString().matches(CharActionsMenuEntries.DELETE.toString()))
+        {
+            rasterManager.deleteRasterBox(rbX, rbY);
+        }
+        else if(cbAction.getValue().toString().matches(CharActionsMenuEntries.ADD.toString()))
+        {
+            rasterManager.addCharForRasterBox(rbX, rbY, getSemChar());
+        }
 
         drawRaster();
         drawSemanticMap();
+    }
+
+    private char getSemChar()
+    {
+        char semChar = GameElemMenuEntries.BACKGORUND.getChar();
+
+        if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.COLLECTABLE.toString()))
+            semChar = GameElemMenuEntries.COLLECTABLE.getChar();
+        else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.FLOOR.toString()))
+            semChar = GameElemMenuEntries.FLOOR.getChar();
+        else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.ENEMY.toString()))
+            semChar = GameElemMenuEntries.ENEMY.getChar();
+        else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.PLATFORM.toString()))
+            semChar = GameElemMenuEntries.PLATFORM.getChar();
+
+        return semChar;
     }
 
     private void cropImage()
@@ -152,24 +185,14 @@ public class CustomController implements Initializable {
     }
 
     @FXML
-    private void changeGameElem()
-    {
-
-    }
-
-    @FXML
     private void loadFirstTile()
     {
-        //if(ivMap.getImage() != null) {
+        int height = (int) currDispImg.getHeight();
+        currWStepPos = 0;
 
-            int height = (int) currDispImg.getHeight();
+        loadTile(height, currWStepPos, (currWStepPos + height));
 
-            currWStepPos = 0;
-
-            loadTile(height, currWStepPos, (currWStepPos + height));
-
-            currWStepPos += height;
-        //}
+        currWStepPos += height;
     }
 
     @FXML
@@ -205,43 +228,30 @@ public class CustomController implements Initializable {
     }
     private void loadTile(int height, int xStart, int xEnd)
     {
-        System.out.println();
-        System.out.println("startX: "+ xStart + " xEnd: "+xEnd);
+        PixelReader pixelReader = currDispImg.getPixelReader();
 
-        // new subimage is not out of width of orig image
-       // if (xEnd <= currDispImg.getWidth()) {
+        // Create WritableImage
+        WritableImage croppedImg = new WritableImage(height, height);
+        PixelWriter pixelWriter = croppedImg.getPixelWriter();
 
-            PixelReader pixelReader = currDispImg.getPixelReader();
+        // Determine the color of each pixel in a specified row
+        for (int readY = 0; readY < height; readY++) {
+            for (int readX = xStart; readX < xEnd; readX++) {
 
-            // Create WritableImage
-            WritableImage croppedImg = new WritableImage(height, height);
-            PixelWriter pixelWriter = croppedImg.getPixelWriter();
+                Color color = pixelReader.getColor(readX, readY);
+                int pwX = readX - xStart;
 
-            // Determine the color of each pixel in a specified row
-            for (int readY = 0; readY < height; readY++) {
-                for (int readX = xStart; readX < xEnd; readX++) {
-
-                    Color color = pixelReader.getColor(readX, readY);
-                    int pwX = readX - xStart;
-
-                    // Now write a brighter color to the PixelWriter.
-                    color = color.brighter();
-                    pixelWriter.setColor(pwX, readY, color);
-                }
+                // Now write a brighter color to the PixelWriter.
+                color = color.brighter();
+                pixelWriter.setColor(pwX, readY, color);
             }
+        }
 
-            //currWStepPos += height;
+        ivMap.setImage(croppedImg);
+        rasterManager.setTile(croppedImg);
 
-            ivMap.setImage(croppedImg);
-            //ivSemMap.setImage(croppedImg);
-
-            rasterManager.setTile(croppedImg);
-
-            drawRaster();
-            drawSemanticMap();
-
-            //} else
-         //   System.out.println("Tile image is of bounds of original image!");
+        drawRaster();
+        drawSemanticMap();
     }
 
     private void drawSemanticMap()
@@ -252,7 +262,6 @@ public class CustomController implements Initializable {
         gcSemMap.beginPath();
 
         char[][] semanticMap = rasterManager.getCharRepresentation();
-        // System.out.println("sem map length: "+semanticMap.length);
 
         for(int i = 0; i < semanticMap.length; i++)
         {
@@ -261,14 +270,23 @@ public class CustomController implements Initializable {
                 int x = (int) ((j * rasterBoxSide) + (rasterBoxSide / 2));
                 int y = (int) ((i * rasterBoxSide) + (rasterBoxSide / 2));
 
-                System.out.println("x: "+ x +" y: "+y +" i: "+i+" j: "+j);
                 gcSemMap.strokeText(""+semanticMap[j][i], y, x);
             }
         }
+
         gcSemMap.closePath();
     }
 
     @FXML
+    private void changeRaster()
+    {
+
+        rasterBoxSide = cMap.getHeight() / getRasterSize();
+        rasterManager.setRasterSize(getRasterSize());
+        drawRaster();
+
+    }
+
     private void drawRaster()
     {
         if(ivMap.getImage() != null) {
@@ -281,8 +299,6 @@ public class CustomController implements Initializable {
 
             gcMap.setStroke(Color.RED);
             gcSemMap.setStroke(Color.RED);
-
-            // TODO canvas at wrong position?
 
             int imageHeight = (int) ivMap.getImage().getHeight();
             int imageWidth = (int) ivMap.getImage().getWidth();
@@ -308,7 +324,6 @@ public class CustomController implements Initializable {
                 gcMap.stroke();
                 gcSemMap.stroke();
             }
-
 
             // vertical lines
             for(int i = 0; i <= imageWidth; i += rasterBoxSide)
@@ -340,6 +355,9 @@ public class CustomController implements Initializable {
         }
         else if(cbRaster.getValue().toString().matches(RasterSizeMenuEntries.R32x32.toString())) {
             rasterSize = 32;
+        }
+        else if(cbRaster.getValue().toString().matches(RasterSizeMenuEntries.R64x64.toString())) {
+            rasterSize = 64;
         }
 
         return rasterSize;

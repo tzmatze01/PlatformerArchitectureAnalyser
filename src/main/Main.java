@@ -21,7 +21,10 @@ public class Main extends Application {
 
         primaryStage.setTitle("Architecture Analyser");
 
-        primaryStage.setScene(new Scene(root, 1000, 800));
+        Scene scene = new Scene(root, 1000, 800);
+        scene.getStylesheets().add(getClass().getResource("/main/resources/styling.css").toExternalForm());
+
+        primaryStage.setScene(scene);
         primaryStage.sizeToScene();
         primaryStage.show();
     }
