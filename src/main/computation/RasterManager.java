@@ -19,8 +19,6 @@ public class RasterManager {
     private Map<Integer, Character>  rasterboxCharMap; // key : rasterbox hash, value : char representation
     private char[][] charRepresentation;
 
-    private int[][] charHashMap;
-
     private int rasterSize;
     private int tileSideLength;
     private int rasterBoxSideLength;
@@ -30,8 +28,6 @@ public class RasterManager {
         this.rasterSize = rasterSize;
         this.rasterboxCharMap = new HashMap<>();
         this.charRepresentation = new char[rasterSize][rasterSize];
-
-        this.charHashMap = new int[rasterSize][rasterSize];
     }
 
     // TODO set rasterSize() -> calls setTile()
@@ -42,7 +38,6 @@ public class RasterManager {
         this.rasterBoxSideLength = tileSideLength / rasterSize;
 
         this.charRepresentation = new char[rasterSize][rasterSize];
-        this.charHashMap = new int[rasterSize][rasterSize];
 
         analyseTile();
     }
@@ -60,15 +55,10 @@ public class RasterManager {
 
         this.charRepresentation = new char[rasterSize][rasterSize];
 
-        this.charHashMap = new int[rasterSize][rasterSize];
-
-        //System.out.println("tilesidelength:" + tileSideLength);
-        //System.out.println("rbSideLength:" + rasterBoxSideLength);
-
         analyseTile();
     }
 
-    // TODO build table char[][] - hash
+    // TODO build table char[][] - hash for better performance
     private void analyseTile()
     {
         // check if any previously analysed raster match with any raster of current tile
@@ -78,8 +68,6 @@ public class RasterManager {
                 int hash = analyseRasterBox(i, j);
 
                 if(rasterboxCharMap.keySet().contains(hash)) {
-
-                    // System.out.println(""+ i + " "+ j +" hash: "+hash);
                     charRepresentation[j][i] = rasterboxCharMap.get(hash);
                 }
             }
@@ -107,7 +95,7 @@ public class RasterManager {
 
     public char[][] getCharRepresentation()
     {
-        printSemMap();
+        //printSemMap();
         return this.charRepresentation;
     }
 

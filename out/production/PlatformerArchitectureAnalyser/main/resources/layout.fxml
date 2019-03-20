@@ -24,8 +24,8 @@
                     <Button fx:id="bFirstTile" onAction="#loadFirstTile"></Button>
                 </HBox>
                 <HBox>
-                    <Button fx:id="bNextRasterBox" onAction="#saveTile"></Button>
-                    <Button fx:id="bPreviousRasterBox" onAction="#saveTile"></Button>
+                    <Button fx:id="bNextRasterBox" onAction="#nextRasterBox"></Button>
+                    <Button fx:id="bPreviousRasterBox" onAction="#previousRasterBox"></Button>
                 </HBox>
                 <HBox>
                     <Button fx:id="bSaveTile" onAction="#saveTile"></Button>

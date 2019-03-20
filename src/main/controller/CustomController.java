@@ -307,11 +307,21 @@ public class CustomController implements Initializable {
     @FXML
     private void changeRaster()
     {
-
         rasterBoxSide = cMap.getHeight() / getRasterSize();
         rasterManager.setRasterSize(getRasterSize());
         drawRaster();
+    }
 
+    @FXML
+    private void nextRasterBox()
+    {
+        // TODO
+    }
+
+    @FXML
+    private void previousRasterBox()
+    {
+        // TODO
     }
 
     private void drawRaster()
@@ -326,9 +336,6 @@ public class CustomController implements Initializable {
 
             gcMap.setStroke(Color.RED);
             gcSemMap.setStroke(Color.RED);
-
-            //int imageHeight = (int) ivMap.getImage().getHeight();
-            //int imageWidth = (int) ivMap.getImage().getWidth();
 
             gcMap.beginPath();
             gcSemMap.beginPath();
