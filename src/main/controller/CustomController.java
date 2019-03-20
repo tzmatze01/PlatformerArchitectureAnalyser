@@ -34,6 +34,9 @@ public class CustomController implements Initializable {
     private int currWStepPos;
     private double rasterBoxSide;
 
+    private String imageName;
+    private int tileNumber;
+
     private GraphicsContext gcMap;
     private GraphicsContext gcSemMap;
 
@@ -46,12 +49,18 @@ public class CustomController implements Initializable {
     private Canvas cMap;
     private Canvas cSemMap;
 
+    /*
+            IMAGEVIEW
+     */
     @FXML
     private ImageView ivMap;
 
     @FXML
     private ImageView ivSemMap;
 
+    /*
+            BUTTONS
+     */
     @FXML
     private Button bNextMap;
 
@@ -65,6 +74,12 @@ public class CustomController implements Initializable {
     private Button bFirstTile;
 
     @FXML
+    private Button bSaveTile;
+
+    /*
+            COMBOBOX
+     */
+    @FXML
     private ComboBox cbRaster;
 
     @FXML
@@ -73,18 +88,24 @@ public class CustomController implements Initializable {
     @FXML
     private ComboBox cbAction;
 
+    /*
+            TEXTFIELD
+     */
     @FXML
     private TextField tfLog;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         currWStepPos = 0;
+        tileNumber = 0;
 
         bNextMap.setText("Next Map");
         bNextTile.setText("Load Next Tile");
         bPreviousTile.setText("Load Previous Tile");
         bFirstTile.setText("Load First Tile");
+        bSaveTile.setText("Save Tile");
 
         cbRaster.setItems(FXCollections.observableArrayList(RasterSizeMenuEntries.values()));
         cbRaster.getSelectionModel().selectFirst();
@@ -115,6 +136,9 @@ public class CustomController implements Initializable {
     {
         // TODO load next image from folder
         currDispImg = new Image(getClass().getResource("../images/test.png").toExternalForm());
+
+        // TODO imagename
+        imageName = "test";
 
         // canvases need to be initiaised for every new iage, to fit proportions of img
         initCanvases();
@@ -189,6 +213,7 @@ public class CustomController implements Initializable {
     {
         int height = (int) currDispImg.getHeight();
         currWStepPos = 0;
+        tileNumber = 0;
 
         loadTile(height, currWStepPos, (currWStepPos + height));
 
@@ -202,6 +227,7 @@ public class CustomController implements Initializable {
 
         if((currWStepPos - height) >= 0) {
 
+            tileNumber -= 1;
             //int start = currWStepPos - height;
 
             // TODO problem is marker after loading tile -> new marker in the middle of the picture ?
@@ -221,6 +247,8 @@ public class CustomController implements Initializable {
         int height = (int) currDispImg.getHeight();
 
         if((currWStepPos + height) <= currDispImg.getWidth()) {
+
+            tileNumber += 1;
 
             loadTile(height, currWStepPos, (currWStepPos + height));
             currWStepPos += height;
@@ -256,6 +284,8 @@ public class CustomController implements Initializable {
 
     private void drawSemanticMap()
     {
+        // TODO char size relativ to rastersize
+
         GraphicsContext gcSemMap = cSemMap.getGraphicsContext2D();
 
         gcSemMap.setStroke(Color.RED);
@@ -275,6 +305,12 @@ public class CustomController implements Initializable {
         }
 
         gcSemMap.closePath();
+    }
+
+    @FXML
+    private void saveTile()
+    {
+        rasterManager.saveToFile(imageName, ""+tileNumber);
     }
 
     @FXML

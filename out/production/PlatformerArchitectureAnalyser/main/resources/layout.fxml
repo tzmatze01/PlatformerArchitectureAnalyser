@@ -22,6 +22,8 @@
                     <Button fx:id="bNextTile" onAction="#loadNextTile"></Button>
                     <Button fx:id="bPreviousTile" onAction="#loadPreviousTile"></Button>
                     <Button fx:id="bFirstTile" onAction="#loadFirstTile"></Button>
+                    <Button fx:id="bSaveTile" onAction="#saveTile"></Button>
+
                 </HBox>
             </VBox>
 

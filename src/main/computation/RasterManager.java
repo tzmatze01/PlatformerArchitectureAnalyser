@@ -4,6 +4,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -143,4 +145,23 @@ public class RasterManager {
             System.out.println();
         }
     }
+
+    public void saveToFile(String filename, String tileName) {
+        try (PrintWriter out = new PrintWriter("src/main/semanticMaps/"+filename+"_"+rasterSize+"_"+tileName+".txt")) {
+
+            for (int i = 0; i < rasterSize; ++i) {
+
+                for (int j = 0; j < rasterSize; ++j) {
+                    out.print(charRepresentation[i][j]);
+
+                    if (j < rasterSize - 1)
+                        out.print("; ");
+                }
+                out.println();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
