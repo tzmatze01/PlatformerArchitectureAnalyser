@@ -134,8 +134,8 @@ public class RasterManager {
         }
     }
 
-    public void saveToFile(String filename, String tileName) {
-        try (PrintWriter out = new PrintWriter("src/main/semanticMaps/"+filename+"_"+rasterSize+"_"+tileName+".txt")) {
+    public void saveToFile(String filename, String tileName, String rbOffset) {
+        try (PrintWriter out = new PrintWriter("src/main/semanticMaps/"+filename+"_rs"+rasterSize+"tn"+tileName+"ro"+rbOffset+".txt")) {
 
             for (int i = 0; i < rasterSize; ++i) {
 

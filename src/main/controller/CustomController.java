@@ -25,33 +25,33 @@ import java.util.ResourceBundle;
 public class CustomController implements Initializable {
 
     private RasterManager rasterManager;
+    private double rbSideLength;
+    private int rbOffset;
 
-    private Image currDispImg;
+    private Image currImage;
     private String imageName;
-
-    private double rasterBoxSide;
-
-    private int displaySideLength;
+    private int currImageSideLength;
     private int imageHeight;
+
     private int tileNumber;
 
+    private Canvas cMap;
+    private Canvas cSemMap;
+
+    /*
+            STACKPANE
+     */
     @FXML
     private StackPane spMap;
 
     @FXML
     private StackPane spSemMap;
 
-    private Canvas cMap;
-    private Canvas cSemMap;
-
     /*
             IMAGEVIEW
      */
     @FXML
     private ImageView ivMap;
-
-    @FXML
-    private ImageView ivSemMap;
 
     /*
             BUTTONS
@@ -100,6 +100,7 @@ public class CustomController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         tileNumber = 0;
+        rbOffset = 0;
 
         bNextMap.setText("Next Map");
         bNextTile.setText("Load Next Tile");
@@ -124,22 +125,13 @@ public class CustomController implements Initializable {
         rasterManager = new RasterManager(getRasterSize());
     }
 
-
-
-    /*
-        TODO: versetztes Raster
-        TODO: merken von tiles und auf näcshtes Rasterbild anwenden -> store num RGB pixels in raster and check every other
-
-        TODO: generate FV for sides of image ( platform start)
-     */
-
     @FXML
     private void loadNextImage()
     {
         // TODO load next image from folder
-        currDispImg = new Image(getClass().getResource("../images/test.png").toExternalForm());
+        currImage = new Image(getClass().getResource("../images/test.png").toExternalForm());
 
-        imageHeight = (int) currDispImg.getHeight();
+        imageHeight = (int) currImage.getHeight();
 
         // TODO imagename
         imageName = "test";
@@ -154,21 +146,29 @@ public class CustomController implements Initializable {
 
     private void initCanvases()
     {
-        displaySideLength = (int) currDispImg.getHeight() * 2;
+        currImageSideLength = (int) currImage.getHeight() * 2;
 
-        ivMap.setFitHeight(displaySideLength);
-        ivMap.setFitWidth(displaySideLength);
+        ivMap.setFitHeight(currImageSideLength);
+        ivMap.setFitWidth(currImageSideLength);
 
         // init canvasas and add to stackpanes for overlay grid
-        cMap = new Canvas(displaySideLength, displaySideLength);
-        cSemMap = new Canvas(displaySideLength, displaySideLength);
+        cMap = new Canvas(currImageSideLength, currImageSideLength);
+        cSemMap = new Canvas(currImageSideLength, currImageSideLength);
 
-        rasterBoxSide = displaySideLength / getRasterSize();
+        rbSideLength = currImageSideLength / getRasterSize();
 
         spMap.getChildren().add(cMap);
         spSemMap.getChildren().add(cSemMap);
 
         cMap.setOnMousePressed(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                identifyRasterBox(event.getX(), event.getY());
+            }
+        });
+
+        cSemMap.setOnMousePressed(new EventHandler<MouseEvent>() {
 
             @Override
             public void handle(MouseEvent event) {
@@ -236,41 +236,45 @@ public class CustomController implements Initializable {
     @FXML
     private void loadNextTile()
     {
-        if((tileNumber + 2) * imageHeight < currDispImg.getWidth()) {
+        if((tileNumber + 2) * imageHeight < currImage.getWidth()) {
             tileNumber += 1;
             loadTile();
         }
     }
     private void loadTile()
     {
-        PixelReader pixelReader = currDispImg.getPixelReader();
+        PixelReader pixelReader = currImage.getPixelReader();
 
-        int xStart = tileNumber * imageHeight;
+        int offset = (int) (rbOffset * (rbSideLength / 2)); // rbSideLength / 2, because image is stretched * 2
+        int xStart = tileNumber * imageHeight + offset;
         int xEnd = xStart + imageHeight;
 
-        // Create WritableImage
-        WritableImage croppedImg = new WritableImage(imageHeight, imageHeight);
-        PixelWriter pixelWriter = croppedImg.getPixelWriter();
+        if(xEnd <= currImage.getWidth()) {
+            // Create WritableImage
+            WritableImage croppedImg = new WritableImage(imageHeight, imageHeight);
+            PixelWriter pixelWriter = croppedImg.getPixelWriter();
 
-        // Determine the color of each pixel in a specified row
-        for (int readY = 0; readY < imageHeight; readY++) {
-            for (int readX = xStart; readX < xEnd; readX++) {
+            // Determine the color of each pixel in a specified row
+            for (int readY = 0; readY < imageHeight; readY++) {
+                for (int readX = xStart; readX < xEnd; readX++) {
 
-                Color color = pixelReader.getColor(readX, readY);
-                int pwX = readX - xStart;
+                    Color color = pixelReader.getColor(readX, readY);
+                    int pwX = readX - xStart;
 
-                // Now write a brighter color to the PixelWriter.
-                color = color.brighter();
-                pixelWriter.setColor(pwX, readY, color);
+                    // Now write a brighter color to the PixelWriter.
+                    color = color.brighter();
+                    pixelWriter.setColor(pwX, readY, color);
+                }
             }
+
+            ivMap.setImage(croppedImg);
+            rasterManager.setTile(croppedImg);
+
+            drawRaster();
+            drawSemanticMap();
         }
-
-
-        ivMap.setImage(croppedImg);
-        rasterManager.setTile(croppedImg);
-
-        drawRaster();
-        drawSemanticMap();
+        else
+            System.out.println("Out of bounds!");
     }
 
     private void drawSemanticMap()
@@ -288,8 +292,8 @@ public class CustomController implements Initializable {
         {
             for(int j = 0; j < semanticMap.length; j++)
             {
-                int x = (int) ((j * rasterBoxSide) + (rasterBoxSide / 2));
-                int y = (int) ((i * rasterBoxSide) + (rasterBoxSide / 2));
+                int x = (int) ((j * rbSideLength) + (rbSideLength / 2));
+                int y = (int) ((i * rbSideLength) + (rbSideLength / 2));
 
                 gcSemMap.strokeText(""+semanticMap[j][i], y, x);
             }
@@ -301,27 +305,41 @@ public class CustomController implements Initializable {
     @FXML
     private void saveTile()
     {
-        rasterManager.saveToFile(imageName, ""+tileNumber);
+        rasterManager.saveToFile(imageName, ""+tileNumber, ""+rbOffset);
     }
 
     @FXML
     private void changeRaster()
     {
-        rasterBoxSide = cMap.getHeight() / getRasterSize();
+        rbSideLength = cMap.getHeight() / getRasterSize();
         rasterManager.setRasterSize(getRasterSize());
         drawRaster();
+
+        // TODO call nextrasterbox?
     }
 
     @FXML
     private void nextRasterBox()
     {
-        // TODO
+        //if((rbOffset + 1) * rbSideLength > imageHeight)
+        if(rbOffset >= getRasterSize())
+            rbOffset = 0;
+        else {
+            rbOffset += 1;
+            loadTile();
+        }
     }
 
     @FXML
     private void previousRasterBox()
     {
-        // TODO
+        //if((rbOffset - 1) * rbSideLength > imageHeight)
+        if((rbOffset - 1) < 0)
+            rbOffset = 0;
+        else {
+            rbOffset -= 1;
+            loadTile();
+        }
     }
 
     private void drawRaster()
@@ -347,26 +365,26 @@ public class CustomController implements Initializable {
             gcSemMap.moveTo(0,0);
 
             // horizontal lines
-            for(int i = 0; i <= displaySideLength; i += rasterBoxSide)
+            for(int i = 0; i <= currImageSideLength; i += rbSideLength)
             {
                 gcMap.moveTo(0, i);
                 gcSemMap.moveTo(0, i);
 
-                gcMap.lineTo(displaySideLength, i);
-                gcSemMap.lineTo(displaySideLength, i);
+                gcMap.lineTo(currImageSideLength, i);
+                gcSemMap.lineTo(currImageSideLength, i);
 
                 gcMap.stroke();
                 gcSemMap.stroke();
             }
 
             // vertical lines
-            for(int i = 0; i <= displaySideLength; i += rasterBoxSide)
+            for(int i = 0; i <= currImageSideLength; i += rbSideLength)
             {
                 gcMap.moveTo(i, 0);
                 gcSemMap.moveTo(i, 0);
 
-                gcMap.lineTo(i, displaySideLength);
-                gcSemMap.lineTo(i, displaySideLength);
+                gcMap.lineTo(i, currImageSideLength);
+                gcSemMap.lineTo(i, currImageSideLength);
 
                 gcMap.stroke();
                 gcSemMap.stroke();
