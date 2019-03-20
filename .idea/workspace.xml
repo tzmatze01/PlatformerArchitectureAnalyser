@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2f4749a5-5d50-4eaf-af33-74cf72adcc20" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/computation/RasterManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/computation/RasterManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/controller/CustomController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/controller/CustomController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/layout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/layout.fxml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -27,17 +25,16 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/controller/CustomController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="628">
-              <caret line="287" selection-start-line="287" selection-end-line="287" />
+            <state relative-caret-position="300">
+              <caret line="220" column="9" lean-forward="true" selection-start-line="220" selection-start-column="9" selection-end-line="220" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#3618#3619#0" expanded="true" />
                 <element signature="e#3695#3696#0" expanded="true" />
-                <element signature="e#8421#8422#0" expanded="true" />
-                <element signature="e#8486#8487#0" expanded="true" />
+                <element signature="e#7966#7967#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -62,10 +59,10 @@
           <provider editor-type-id="JavaFX-Scene-Builder" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/computation/RasterManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="202">
+            <state relative-caret-position="1987">
               <caret line="149" column="70" selection-start-line="149" selection-start-column="70" selection-end-line="149" selection-end-column="70" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -152,8 +149,8 @@
         <option value="$PROJECT_DIR$/src/main/enums/GameElemMenuEntries.java" />
         <option value="$PROJECT_DIR$/src/main/resources/styling.css" />
         <option value="$PROJECT_DIR$/src/main/resources/layout.fxml" />
-        <option value="$PROJECT_DIR$/src/main/controller/CustomController.java" />
         <option value="$PROJECT_DIR$/src/main/computation/RasterManager.java" />
+        <option value="$PROJECT_DIR$/src/main/controller/CustomController.java" />
       </list>
     </option>
   </component>
@@ -197,7 +194,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1553073978802" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1553075242186" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Projects/Vodafon/prototyp" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -292,18 +289,18 @@
       <workItem from="1552577261092" duration="2262000" />
       <workItem from="1552898895317" duration="2368000" />
       <workItem from="1552917885011" duration="4679000" />
-      <workItem from="1553072147580" duration="1795000" />
+      <workItem from="1553072147580" duration="3075000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="56299000" />
+    <option name="totallyTimeSpent" value="57579000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.29317698" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.29317698" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -311,7 +308,7 @@
       <window_info id="Favorites" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32897604" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.28710726" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.23618636" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3997833" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -417,28 +414,30 @@
       </provider>
       <provider editor-type-id="JavaFX-Scene-Builder" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/controller/CustomController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="628">
-          <caret line="287" selection-start-line="287" selection-end-line="287" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3618#3619#0" expanded="true" />
-            <element signature="e#3695#3696#0" expanded="true" />
-            <element signature="e#8421#8422#0" expanded="true" />
-            <element signature="e#8486#8487#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/src/main/semanticMaps/test_8_1.txt">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/computation/RasterManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
+        <state relative-caret-position="1987">
           <caret line="149" column="70" selection-start-line="149" selection-start-column="70" selection-end-line="149" selection-end-column="70" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1267#1268#0" expanded="true" />
             <element signature="e#1294#1295#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/controller/CustomController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="220" column="9" lean-forward="true" selection-start-line="220" selection-start-column="9" selection-end-line="220" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3618#3619#0" expanded="true" />
+            <element signature="e#3695#3696#0" expanded="true" />
+            <element signature="e#7966#7967#0" expanded="true" />
           </folding>
         </state>
       </provider>

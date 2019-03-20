@@ -35,6 +35,7 @@ public class CustomController implements Initializable {
     private double rasterBoxSide;
 
     private String imageName;
+    private int imageHeight;
     private int tileNumber;
 
     private GraphicsContext gcMap;
@@ -137,6 +138,8 @@ public class CustomController implements Initializable {
         // TODO load next image from folder
         currDispImg = new Image(getClass().getResource("../images/test.png").toExternalForm());
 
+        imageHeight = (int) currDispImg.getHeight();
+
         // TODO imagename
         imageName = "test";
 
@@ -144,7 +147,7 @@ public class CustomController implements Initializable {
         initCanvases();
 
         if(ivMap.getImage() == null)
-            loadNextTile();
+            loadFirstTile();
     }
 
 
@@ -211,59 +214,40 @@ public class CustomController implements Initializable {
     @FXML
     private void loadFirstTile()
     {
-        int height = (int) currDispImg.getHeight();
-        currWStepPos = 0;
         tileNumber = 0;
-
-        loadTile(height, currWStepPos, (currWStepPos + height));
-
-        currWStepPos += height;
+        loadTile();
     }
 
     @FXML
     private void loadPreviousTile()
     {
-        int height = (int) currDispImg.getHeight();
-
-        if((currWStepPos - height) >= 0) {
-
+        if((tileNumber - 1) >= 0) {
             tileNumber -= 1;
-            //int start = currWStepPos - height;
-
-            // TODO problem is marker after loading tile -> new marker in the middle of the picture ?
-            //currWStepPos -= height;
-
-            loadTile(height, (currWStepPos - height), currWStepPos);
-            currWStepPos -= height;
+            loadTile();
         }
     }
 
     @FXML
     private void loadNextTile()
     {
-        //System.out.println();
-        //System.out.println("currWStepPos: "+currWStepPos);
-
-        int height = (int) currDispImg.getHeight();
-
-        if((currWStepPos + height) <= currDispImg.getWidth()) {
-
+        if((tileNumber + 2) * imageHeight < currDispImg.getWidth()) {
             tileNumber += 1;
-
-            loadTile(height, currWStepPos, (currWStepPos + height));
-            currWStepPos += height;
+            loadTile();
         }
     }
-    private void loadTile(int height, int xStart, int xEnd)
+    private void loadTile()
     {
         PixelReader pixelReader = currDispImg.getPixelReader();
 
+        int xStart = tileNumber * imageHeight;
+        int xEnd = xStart + imageHeight;
+
         // Create WritableImage
-        WritableImage croppedImg = new WritableImage(height, height);
+        WritableImage croppedImg = new WritableImage(imageHeight, imageHeight);
         PixelWriter pixelWriter = croppedImg.getPixelWriter();
 
         // Determine the color of each pixel in a specified row
-        for (int readY = 0; readY < height; readY++) {
+        for (int readY = 0; readY < imageHeight; readY++) {
             for (int readX = xStart; readX < xEnd; readX++) {
 
                 Color color = pixelReader.getColor(readX, readY);
