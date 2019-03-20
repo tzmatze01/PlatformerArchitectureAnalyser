@@ -22,8 +22,13 @@
                     <Button fx:id="bNextTile" onAction="#loadNextTile"></Button>
                     <Button fx:id="bPreviousTile" onAction="#loadPreviousTile"></Button>
                     <Button fx:id="bFirstTile" onAction="#loadFirstTile"></Button>
+                </HBox>
+                <HBox>
+                    <Button fx:id="bNextRasterBox" onAction="#saveTile"></Button>
+                    <Button fx:id="bPreviousRasterBox" onAction="#saveTile"></Button>
+                </HBox>
+                <HBox>
                     <Button fx:id="bSaveTile" onAction="#saveTile"></Button>
-
                 </HBox>
             </VBox>
 
@@ -39,7 +44,7 @@
     </top>
     <center >
 
-        <VBox>
+        <HBox>
             <StackPane fx:id="spMap" id="spMap">
                 <ImageView fx:id="ivMap"/>
             </StackPane>
@@ -47,7 +52,7 @@
             <StackPane fx:id="spSemMap" id="spSemMap">
                 <ImageView fx:id="ivSemMap"/>
             </StackPane>
-        </VBox>
+        </HBox>
 
     </center>
 

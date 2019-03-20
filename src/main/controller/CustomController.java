@@ -24,22 +24,16 @@ import java.util.ResourceBundle;
 
 public class CustomController implements Initializable {
 
-
-    //private final int canvasHeight = 300;
-    //private final int canvasWidth = 400;
-
     private RasterManager rasterManager;
 
     private Image currDispImg;
-    private int currWStepPos;
+    private String imageName;
+
     private double rasterBoxSide;
 
-    private String imageName;
+    private int displaySideLength;
     private int imageHeight;
     private int tileNumber;
-
-    private GraphicsContext gcMap;
-    private GraphicsContext gcSemMap;
 
     @FXML
     private StackPane spMap;
@@ -77,6 +71,12 @@ public class CustomController implements Initializable {
     @FXML
     private Button bSaveTile;
 
+    @FXML
+    private Button bNextRasterBox;
+
+    @FXML
+    private Button bPreviousRasterBox;
+
     /*
             COMBOBOX
      */
@@ -99,7 +99,6 @@ public class CustomController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        currWStepPos = 0;
         tileNumber = 0;
 
         bNextMap.setText("Next Map");
@@ -107,6 +106,8 @@ public class CustomController implements Initializable {
         bPreviousTile.setText("Load Previous Tile");
         bFirstTile.setText("Load First Tile");
         bSaveTile.setText("Save Tile");
+        bNextRasterBox.setText("Load next RB");
+        bPreviousRasterBox.setText("Load previous RB");
 
         cbRaster.setItems(FXCollections.observableArrayList(RasterSizeMenuEntries.values()));
         cbRaster.getSelectionModel().selectFirst();
@@ -153,11 +154,16 @@ public class CustomController implements Initializable {
 
     private void initCanvases()
     {
-        // init canvasas and add to stackpanes for overlay grid
-        cMap = new Canvas(currDispImg.getHeight(), currDispImg.getHeight());
-        cSemMap = new Canvas(currDispImg.getHeight(), currDispImg.getHeight());
+        displaySideLength = (int) currDispImg.getHeight() * 2;
 
-        rasterBoxSide = cMap.getHeight() / getRasterSize();
+        ivMap.setFitHeight(displaySideLength);
+        ivMap.setFitWidth(displaySideLength);
+
+        // init canvasas and add to stackpanes for overlay grid
+        cMap = new Canvas(displaySideLength, displaySideLength);
+        cSemMap = new Canvas(displaySideLength, displaySideLength);
+
+        rasterBoxSide = displaySideLength / getRasterSize();
 
         spMap.getChildren().add(cMap);
         spSemMap.getChildren().add(cSemMap);
@@ -259,6 +265,7 @@ public class CustomController implements Initializable {
             }
         }
 
+
         ivMap.setImage(croppedImg);
         rasterManager.setTile(croppedImg);
 
@@ -320,8 +327,8 @@ public class CustomController implements Initializable {
             gcMap.setStroke(Color.RED);
             gcSemMap.setStroke(Color.RED);
 
-            int imageHeight = (int) ivMap.getImage().getHeight();
-            int imageWidth = (int) ivMap.getImage().getWidth();
+            //int imageHeight = (int) ivMap.getImage().getHeight();
+            //int imageWidth = (int) ivMap.getImage().getWidth();
 
             gcMap.beginPath();
             gcSemMap.beginPath();
@@ -333,26 +340,26 @@ public class CustomController implements Initializable {
             gcSemMap.moveTo(0,0);
 
             // horizontal lines
-            for(int i = 0; i <= imageHeight; i += rasterBoxSide)
+            for(int i = 0; i <= displaySideLength; i += rasterBoxSide)
             {
                 gcMap.moveTo(0, i);
                 gcSemMap.moveTo(0, i);
 
-                gcMap.lineTo(imageWidth, i);
-                gcSemMap.lineTo(imageWidth, i);
+                gcMap.lineTo(displaySideLength, i);
+                gcSemMap.lineTo(displaySideLength, i);
 
                 gcMap.stroke();
                 gcSemMap.stroke();
             }
 
             // vertical lines
-            for(int i = 0; i <= imageWidth; i += rasterBoxSide)
+            for(int i = 0; i <= displaySideLength; i += rasterBoxSide)
             {
                 gcMap.moveTo(i, 0);
                 gcSemMap.moveTo(i, 0);
 
-                gcMap.lineTo(i, imageHeight);
-                gcSemMap.lineTo(i, imageHeight);
+                gcMap.lineTo(i, displaySideLength);
+                gcSemMap.lineTo(i, displaySideLength);
 
                 gcMap.stroke();
                 gcSemMap.stroke();
