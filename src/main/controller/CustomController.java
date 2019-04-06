@@ -1,6 +1,7 @@
 package main.controller;
 
 import javafx.collections.FXCollections;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,6 +19,9 @@ import main.enums.GameElemMenuEntries;
 import main.computation.RasterManager;
 import main.enums.RasterSizeMenuEntries;
 
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -27,6 +31,9 @@ public class CustomController implements Initializable {
     private RasterManager rasterManager;
     private double rbSideLength;
     private int rbOffset;
+
+    private File[] listOfFiles;
+    private int currFileIndex;
 
     private Image currImage;
     private String imageName;
@@ -99,6 +106,14 @@ public class CustomController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        // load Folder with images
+        File folder = new File("/Users/matthiasdaiber/Documents/Universitaet/SS19/code/maps/SMB/valid");
+        listOfFiles = folder.listFiles();
+        currFileIndex = 0;
+
+        // System.out.println("path: "+folder.getAbsolutePath());
+        // System.out.println("path: "+System.getProperty("user.dir"));
+
         tileNumber = 0;
         rbOffset = 0;
 
@@ -128,19 +143,29 @@ public class CustomController implements Initializable {
     @FXML
     private void loadNextImage()
     {
-        // TODO load next image from folder
-        currImage = new Image(getClass().getResource("../images/test.png").toExternalForm());
+        // TODO check if file or dir
+        //currImage = new Image(getClass().getResource("../../maps/test.png").toExternalForm());
+        System.out.println("path: "+listOfFiles[currFileIndex].getAbsolutePath());
+        currImage = new Image(listOfFiles[currFileIndex].toURI().toString());
+
+
 
         imageHeight = (int) currImage.getHeight();
 
-        // TODO imagename
-        imageName = "test";
+        // imageName = "test";
+        imageName = listOfFiles[currFileIndex].getName();
+
+        ++currFileIndex;
+        if(currFileIndex >= listOfFiles.length) {
+            System.out.println("seen all images");
+            currFileIndex = 0;
+        }
 
         // canvases need to be initiaised for every new iage, to fit proportions of img
         initCanvases();
 
-        if(ivMap.getImage() == null)
-            loadFirstTile();
+        //if(ivMap.getImage() == null)
+        loadFirstTile();
     }
 
 
@@ -198,16 +223,20 @@ public class CustomController implements Initializable {
 
     private char getSemChar()
     {
-        char semChar = GameElemMenuEntries.BACKGORUND.getChar();
+        char semChar = GameElemMenuEntries.BACKGROUND.getChar();
 
-        if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.COLLECTABLE.toString()))
-            semChar = GameElemMenuEntries.COLLECTABLE.getChar();
-        else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.FLOOR.toString()))
-            semChar = GameElemMenuEntries.FLOOR.getChar();
+        if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.INTERACTION.toString()))
+            semChar = GameElemMenuEntries.INTERACTION.getChar();
+        else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.MOVING_PLATFORM.toString()))
+            semChar = GameElemMenuEntries.MOVING_PLATFORM.getChar();
+        else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.DISAPPEARING_PLATFORM.toString()))
+            semChar = GameElemMenuEntries.DISAPPEARING_PLATFORM.getChar();
         else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.ENEMY.toString()))
             semChar = GameElemMenuEntries.ENEMY.getChar();
         else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.PLATFORM.toString()))
             semChar = GameElemMenuEntries.PLATFORM.getChar();
+        else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.TRAP.toString()))
+            semChar = GameElemMenuEntries.TRAP.getChar();
 
         return semChar;
     }
