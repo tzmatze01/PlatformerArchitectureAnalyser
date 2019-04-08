@@ -3,6 +3,7 @@ package main.computation;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
+import main.enums.GameElemMenuEntries;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -17,7 +18,8 @@ public class RasterManager {
     private PixelReader pixelReader;
 
     private Map<Integer, Character>  rasterboxCharMap; // key : rasterbox hash, value : char representation
-    private char[][] charRepresentation;
+    private Map<Integer, GameElemMenuEntries>  hashGameElemMap; // key : rasterbox hash, value : char representation
+    private GameElemMenuEntries[][] charRepresentation;
 
     private int rasterSize;
     private int tileSideLength;
@@ -26,8 +28,9 @@ public class RasterManager {
     public RasterManager(int rasterSize)
     {
         this.rasterSize = rasterSize;
-        this.rasterboxCharMap = new HashMap<>();
-        this.charRepresentation = new char[rasterSize][rasterSize];
+        //this.rasterboxCharMap = new HashMap<>();
+        this.hashGameElemMap = new HashMap<>();
+        this.charRepresentation = new GameElemMenuEntries[rasterSize][rasterSize];
     }
 
     // TODO set rasterSize() -> calls setTile()
@@ -37,7 +40,7 @@ public class RasterManager {
         this.rasterSize = rasterSize;
         this.rasterBoxSideLength = tileSideLength / rasterSize;
 
-        this.charRepresentation = new char[rasterSize][rasterSize];
+        this.charRepresentation = new GameElemMenuEntries[rasterSize][rasterSize];
 
         analyseTile();
     }
@@ -53,7 +56,7 @@ public class RasterManager {
         this.tileSideLength = (int) tile.getWidth();
         this.rasterBoxSideLength = tileSideLength / rasterSize;
 
-        this.charRepresentation = new char[rasterSize][rasterSize];
+        this.charRepresentation = new GameElemMenuEntries[rasterSize][rasterSize];
 
         analyseTile();
     }
@@ -67,8 +70,10 @@ public class RasterManager {
 
                 int hash = analyseRasterBox(i, j);
 
-                if(rasterboxCharMap.keySet().contains(hash)) {
-                    charRepresentation[j][i] = rasterboxCharMap.get(hash);
+                //if(rasterboxCharMap.keySet().contains(hash)) {
+                if(hashGameElemMap.keySet().contains(hash)) {
+                    //charRepresentation[j][i] = rasterboxCharMap.get(hash);
+                    charRepresentation[j][i] = hashGameElemMap.get(hash);
                 }
             }
         }
@@ -93,20 +98,28 @@ public class RasterManager {
         return new RasterBox(pixels).hashCode();
     }
 
-    public char[][] getCharRepresentation()
+    public GameElemMenuEntries[][] getCharRepresentation()
     {
         //printSemMap();
         return this.charRepresentation;
     }
 
-    public void addCharForRasterBox(int x, int y, char c)
+    public Map<Integer, GameElemMenuEntries> getGameElemMapping()
+    {
+        return this.hashGameElemMap;
+    }
+
+    public void addCharForRasterBox(int x, int y, GameElemMenuEntries geme)//char c)
     {
         int hash = analyseRasterBox(x, y);
 
         System.out.println("x: "+ x + " y: "+ y +" hash: "+hash);
 
-        rasterboxCharMap.put(hash, c);
-        charRepresentation[y][x] = c;
+        //rasterboxCharMap.put(hash, c);
+        //charRepresentation[y][x] = c;
+
+        hashGameElemMap.put(hash, geme);
+        charRepresentation[y][x] = geme;
 
         // TODO myb with flag param, to  disable 'autocompletion' of chars
          analyseTile();
@@ -116,8 +129,9 @@ public class RasterManager {
     {
         int hash = analyseRasterBox(x, y);
 
-        if(rasterboxCharMap.keySet().contains(hash))
-            rasterboxCharMap.remove(hash);
+        //if(rasterboxCharMap.keySet().contains(hash))
+        if(hashGameElemMap.keySet().contains(hash))
+            hashGameElemMap.remove(hash);
         else
             System.out.println("Cannot delete, because this rasterbox was not mapped before!");
     }

@@ -7,28 +7,14 @@
 
 
     <top>
+
         <HBox id="controls">
+
             <VBox styleClass="vbox">
                 <Label styleClass="label" text="Image Controls"/>
                 <HBox>
                     <ComboBox fx:id="cbRaster" onAction="#changeRaster" prefWidth="150.0" promptText="Choose Rastersize" />
                     <Button fx:id="bNextMap" onAction="#loadNextImage"></Button>
-                </HBox>
-            </VBox>
-
-            <VBox styleClass="vbox">
-                <Label styleClass="label" text="Tile Actions"/>
-                <HBox>
-                    <Button fx:id="bNextTile" onAction="#loadNextTile"></Button>
-                    <Button fx:id="bPreviousTile" onAction="#loadPreviousTile"></Button>
-                    <Button fx:id="bFirstTile" onAction="#loadFirstTile"></Button>
-                </HBox>
-                <HBox>
-                    <Button fx:id="bNextRasterBox" onAction="#nextRasterBox"></Button>
-                    <Button fx:id="bPreviousRasterBox" onAction="#previousRasterBox"></Button>
-                </HBox>
-                <HBox>
-                    <Button fx:id="bSaveTile" onAction="#saveTile"></Button>
                 </HBox>
             </VBox>
 
@@ -39,7 +25,15 @@
                     <ComboBox fx:id="cbAction"  prefWidth="150.0" promptText="Choose Action" />
                 </HBox>
             </VBox>
+
+            <VBox styleClass="vbox">
+                <Label styleClass="label" text="Other"/>
+                <Button fx:id="bFirstTile" onAction="#loadFirstTile"></Button>
+                <Button fx:id="bSaveTile" onAction="#saveTile"></Button>
+            </VBox>
+
         </HBox>
+
 
     </top>
     <center >
@@ -56,8 +50,37 @@
 
     </center>
 
-    <bottom>
-    </bottom>
+    <right>
+
+        <VBox styleClass="vbox">
+
+            <Label styleClass="headline" text="Image Actions"/>
+            <!-- Tile -->
+            <Label styleClass="label" text="Tiles"/>
+            <HBox styleClass="hbox">
+                <Button fx:id="bNextTile" onAction="#loadNextTile"></Button>
+                <Button fx:id="bPreviousTile" onAction="#loadPreviousTile"></Button>
+            </HBox>
+
+
+            <!-- RasterBox -->
+            <Label styleClass="label" text="Raster"/>
+            <HBox>
+                <Button fx:id="bNextRasterBox" onAction="#nextRasterBox"></Button>
+                <Button fx:id="bPreviousRasterBox" onAction="#previousRasterBox"></Button>
+            </HBox>
+
+            <!-- Pixels -->
+            <Label styleClass="label" text="Pixels"/>
+            <Button fx:id="bPixelUp" onAction="#moveImageUp"></Button>
+            <HBox styleClass="hbox">
+                <Button fx:id="bPixelLeft" onAction="#moveImageLeft"></Button>
+                <Button fx:id="bPixelRight" onAction="#moveImageRight"></Button>
+            </HBox>
+            <Button fx:id="bPixelDown" onAction="#moveImageDown"></Button>
+        </VBox>
+
+    </right>
 
 
     <bottom>

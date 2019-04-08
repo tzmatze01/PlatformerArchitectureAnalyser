@@ -30,7 +30,7 @@ public enum GameElemMenuEntries {
 
     public char getChar() { return this.semChar; }
 
-    private Color getColor()
+    public Color getColor()
     {
         return this.color;
     }

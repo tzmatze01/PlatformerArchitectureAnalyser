@@ -15,6 +15,12 @@
     -fx-font-style: italic;
 }
 
+.headline {
+    -fx-padding: 10px;
+    -fx-font-size: 25px;
+    -fx-font-style: oblique;
+}
+
 #spMap {
     -fx-padding: 50 10 10 10;
 }
@@ -25,6 +31,11 @@
 }
 
 .vbox {
+    -fx-alignment: center;
+    -fx-padding: 0 15 15 10;
+}
+
+.hbox {
     -fx-alignment: center;
     -fx-padding: 0 15 15 10;
 }

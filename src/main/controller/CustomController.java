@@ -23,10 +23,21 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
 import java.util.ResourceBundle;
 
+/*
+TODO register mouse pressed - felder schneller ausmalen
+TODO canvas mit map auch anmalen
+TODO autovervollständigung an und ausschaltbar
 
+TODO buttons um bild zu verschieben
+
+
+ */
 public class CustomController implements Initializable {
+
+    private final int RESIZE_FACTOR = 3;
 
     private RasterManager rasterManager;
     private double rbSideLength;
@@ -84,6 +95,18 @@ public class CustomController implements Initializable {
     @FXML
     private Button bPreviousRasterBox;
 
+    @FXML
+    private Button bPixelUp;
+
+    @FXML
+    private Button bPixelLeft;
+
+    @FXML
+    private Button bPixelRight;
+
+    @FXML
+    private Button bPixelDown;
+
     /*
             COMBOBOX
      */
@@ -124,10 +147,13 @@ public class CustomController implements Initializable {
         bSaveTile.setText("Save Tile");
         bNextRasterBox.setText("Load next RB");
         bPreviousRasterBox.setText("Load previous RB");
+        bPixelUp.setText("Up");
+        bPixelLeft.setText("Left");
+        bPixelRight.setText("Right");
+        bPixelDown.setText("Down");
 
         cbRaster.setItems(FXCollections.observableArrayList(RasterSizeMenuEntries.values()));
         cbRaster.getSelectionModel().selectFirst();
-
 
         cbGameElement.setItems(FXCollections.observableArrayList(GameElemMenuEntries.values()));
         cbGameElement.getSelectionModel().selectFirst();
@@ -138,6 +164,30 @@ public class CustomController implements Initializable {
         drawRaster();
 
         rasterManager = new RasterManager(getRasterSize());
+    }
+
+    @FXML
+    private void moveImageUp()
+    {
+
+    }
+
+    @FXML
+    private void moveImageLeft()
+    {
+
+    }
+
+    @FXML
+    private void moveImageRight()
+    {
+
+    }
+
+    @FXML
+    private void moveImageDown()
+    {
+
     }
 
     @FXML
@@ -171,7 +221,7 @@ public class CustomController implements Initializable {
 
     private void initCanvases()
     {
-        currImageSideLength = (int) currImage.getHeight() * 2;
+        currImageSideLength = (int) currImage.getHeight() * RESIZE_FACTOR;
 
         ivMap.setFitHeight(currImageSideLength);
         ivMap.setFitWidth(currImageSideLength);
@@ -221,24 +271,25 @@ public class CustomController implements Initializable {
         drawSemanticMap();
     }
 
-    private char getSemChar()
+    private GameElemMenuEntries getSemChar()
     {
-        char semChar = GameElemMenuEntries.BACKGROUND.getChar();
+        //char semChar = GameElemMenuEntries.BACKGROUND.getChar();
+        GameElemMenuEntries geme = GameElemMenuEntries.BACKGROUND;
 
         if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.INTERACTION.toString()))
-            semChar = GameElemMenuEntries.INTERACTION.getChar();
+            geme = GameElemMenuEntries.INTERACTION;
         else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.MOVING_PLATFORM.toString()))
-            semChar = GameElemMenuEntries.MOVING_PLATFORM.getChar();
+            geme = GameElemMenuEntries.MOVING_PLATFORM;
         else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.DISAPPEARING_PLATFORM.toString()))
-            semChar = GameElemMenuEntries.DISAPPEARING_PLATFORM.getChar();
+            geme = GameElemMenuEntries.DISAPPEARING_PLATFORM;
         else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.ENEMY.toString()))
-            semChar = GameElemMenuEntries.ENEMY.getChar();
+            geme = GameElemMenuEntries.ENEMY;
         else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.PLATFORM.toString()))
-            semChar = GameElemMenuEntries.PLATFORM.getChar();
+            geme = GameElemMenuEntries.PLATFORM;
         else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.TRAP.toString()))
-            semChar = GameElemMenuEntries.TRAP.getChar();
+            geme = GameElemMenuEntries.TRAP;
 
-        return semChar;
+        return geme;
     }
 
     private void cropImage()
@@ -274,7 +325,7 @@ public class CustomController implements Initializable {
     {
         PixelReader pixelReader = currImage.getPixelReader();
 
-        int offset = (int) (rbOffset * (rbSideLength / 2)); // rbSideLength / 2, because image is stretched * 2
+        int offset = (int) (rbOffset * (rbSideLength / RESIZE_FACTOR)); // rbSideLength / RESIZE_FACTOR, because image is stretched * RESIZE_FACTOR
         int xStart = tileNumber * imageHeight + offset;
         int xEnd = xStart + imageHeight;
 
@@ -312,10 +363,11 @@ public class CustomController implements Initializable {
 
         GraphicsContext gcSemMap = cSemMap.getGraphicsContext2D();
 
-        gcSemMap.setStroke(Color.RED);
+        //gcSemMap.setStroke(Color.RED);
         gcSemMap.beginPath();
 
-        char[][] semanticMap = rasterManager.getCharRepresentation();
+        GameElemMenuEntries[][] semanticMap = rasterManager.getCharRepresentation();
+        //Map<Integer, GameElemMenuEntries> mapping = rasterManager.getGameElemMapping();
 
         for(int i = 0; i < semanticMap.length; i++)
         {
@@ -324,7 +376,10 @@ public class CustomController implements Initializable {
                 int x = (int) ((j * rbSideLength) + (rbSideLength / 2));
                 int y = (int) ((i * rbSideLength) + (rbSideLength / 2));
 
-                gcSemMap.strokeText(""+semanticMap[j][i], y, x);
+                if(semanticMap[j][i] != null) {
+                    gcSemMap.setStroke(semanticMap[j][i].getColor());
+                    gcSemMap.strokeText("" + semanticMap[j][i].getChar(), y, x);
+                }
             }
         }
 
