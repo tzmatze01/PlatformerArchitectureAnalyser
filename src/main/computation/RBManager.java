@@ -67,6 +67,9 @@ public class RBManager {
 
     public void setCharForRB(int widthRB, int heightRB, GameElemMenuEntries geme)
     {
+
+        System.out.println("yRB: "+heightRB+ " xRB: "+widthRB);
+
         // check if char for this hash already stored
         if(rbHashesForChars.containsKey(rasterBoxHashes[widthRB][heightRB]))
         {
@@ -97,6 +100,9 @@ public class RBManager {
                 rasterBoxHashes[wBox][hBox] = analyseRasterBox(wBox, hBox);
             }
         }
+
+
+        System.out.println("Initialised Raster-Map.");
     }
 
     private int analyseRasterBox(int width, int height)
@@ -108,13 +114,15 @@ public class RBManager {
         if(Math.abs(yMapOffset) > rasterBoxSideLength)
             System.out.println("y offset is greater than the pixels in a rasterbox!");
 
-        int wStart = (rasterBoxSideLength * width) + xMapOffset;
+        int wStart = (rasterBoxSideLength * width) - xMapOffset;
         int wEnd = wStart + rasterBoxSideLength;
 
-        int hStart = (rasterBoxSideLength * height) + yMapOffset;
+        int hStart = (rasterBoxSideLength * height) - yMapOffset;
         int hEnd = hStart + rasterBoxSideLength;
 
-        //System.out.println("yOffset: "+yMapOffset+ " xOffset: "+xMapOffset+" rbslength: "+rasterBoxSideLength);
+        System.out.println("yOffset: "+yMapOffset+ " xOffset: "+xMapOffset+" rbslength: "+rasterBoxSideLength);
+        System.out.println("yStart: "+hStart+ " yEnd: "+hEnd);
+        System.out.println("xStart: "+wStart+ " xEnd: "+wEnd+"\n");
 
         // TODO also wStart > map.getWidth  && < 0
         if(wStart < 0)
@@ -124,8 +132,8 @@ public class RBManager {
 
         if(hStart < 0)
             hStart = 0;
-        else if(wEnd > map.getWidth())
-            wEnd = (int)map.getWidth();
+        else if(hEnd > map.getHeight())
+            hEnd = (int)map.getHeight();
 
 
         //System.out.println("y: "+hStart+ " - "+hEnd+" x: "+wStart+" - "+wEnd);
@@ -138,7 +146,7 @@ public class RBManager {
             }
         }
 
-        System.out.println("RB x:"+width+" y:"+height+" has "+pixels.size()+" pixels!");
+        //System.out.println("RB x:"+width+" y:"+height+" has "+pixels.size()+" pixels!");
 
         return new RasterBox(pixels).hashCode();
     }
