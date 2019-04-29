@@ -94,7 +94,7 @@ public class RBManager {
         {
             for(int hBox = 0; hBox < numRBsHeight; hBox++)
             {
-                rasterBoxHashes[numRBsWidth][numRBsHeight] = analyseRasterBox(wBox, hBox);
+                rasterBoxHashes[wBox][hBox] = analyseRasterBox(wBox, hBox);
             }
         }
     }
@@ -114,6 +114,7 @@ public class RBManager {
         int hStart = (rasterBoxSideLength * height) + yMapOffset;
         int hEnd = hStart + rasterBoxSideLength;
 
+        System.out.println("yOffset: "+yMapOffset+ " xOffset: "+xMapOffset);
         // TODO also wStart > map.getWidth  && < 0
         if(wStart < 0)
             wStart = 0;
@@ -171,7 +172,7 @@ public class RBManager {
         {
             int startWidth = (tileNumber * numRBsHeight) + rbOffset;
             int endWidth = startWidth + numRBsHeight;
-            
+
             for(int heigth = 0; heigth < numRBsHeight; heigth++) {
 
                 int tmpWidth = 0;

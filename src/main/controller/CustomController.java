@@ -15,6 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import main.computation.RBManager;
 import main.enums.CharActionsMenuEntries;
 import main.enums.GameElemMenuEntries;
 import main.computation.RasterManager;
@@ -46,7 +47,8 @@ public class CustomController implements Initializable {
 
     private final int RESIZE_FACTOR = 3;
 
-    private RasterManager rasterManager;
+    //private RasterManager rasterManager;
+    private RBManager rbManager;
     private double rbSideLength;
     private int rbOffset;
 
@@ -82,6 +84,8 @@ public class CustomController implements Initializable {
     /*
             BUTTONS
      */
+    @FXML
+    private Button bStartAnalyzing;
     @FXML
     private Button bNextMap;
 
@@ -161,6 +165,7 @@ public class CustomController implements Initializable {
         tileNumber = 0;
         rbOffset = 0;
 
+        bStartAnalyzing.setText("Start Analyzing");
         bNextMap.setText("Next Map");
         bNextTile.setText("Load Next Tile");
         bPreviousTile.setText("Load Previous Tile");
@@ -185,7 +190,8 @@ public class CustomController implements Initializable {
         //tfRaster.setText("10");
         //drawRaster();
 
-        rasterManager = new RasterManager(getRasterSize());
+        //rasterManager = new RasterManager(getRasterSize());
+        rbManager = new RBManager();
     }
 
     @FXML
@@ -194,6 +200,7 @@ public class CustomController implements Initializable {
         verticalImageOffset += 1;
         loadTile();
         //drawRaster();
+        rbManager.setMapOffset(horizontalImageOffset, verticalImageOffset);
     }
 
     @FXML
@@ -202,6 +209,7 @@ public class CustomController implements Initializable {
         horizontalImageOffset -= 1;
         loadTile();
         //drawRaster();
+        rbManager.setMapOffset(horizontalImageOffset, verticalImageOffset);
     }
 
     @FXML
@@ -210,6 +218,7 @@ public class CustomController implements Initializable {
         horizontalImageOffset += 1;
         loadTile();
         //drawRaster();
+        rbManager.setMapOffset(horizontalImageOffset, verticalImageOffset);
     }
 
     @FXML
@@ -218,6 +227,7 @@ public class CustomController implements Initializable {
         verticalImageOffset -= 1;
         loadTile();
         //drawRaster();
+        rbManager.setMapOffset(horizontalImageOffset, verticalImageOffset);
     }
 
     @FXML
@@ -232,6 +242,8 @@ public class CustomController implements Initializable {
 
         // imageName = "test";
         imageName = listOfFiles.get(currFileIndex).getName();
+
+        rbManager.setMap(currImage);
 
         ++currFileIndex;
         if(currFileIndex >= listOfFiles.size()) {
@@ -287,10 +299,20 @@ public class CustomController implements Initializable {
         // TODO calc in tilenumber for RBManager
         // TODO + RB offset
 
+        int tmpTileNumber = tileNumber;
+
         double rasterBoxSide = cMap.getHeight() / getRasterSize();
         int rbX = (int ) (x / rasterBoxSide);
         int rbY = (int ) (y / rasterBoxSide);
 
+        if(rbX + rbOffset > getRasterSize())
+            tmpTileNumber++;
+        else
+            rbX += rbOffset;
+
+        rbX += tmpTileNumber * getRasterSize();
+
+        /*
         if(cbAction.getValue().toString().matches(CharActionsMenuEntries.DELETE.toString()))
         {
             rasterManager.deleteRasterBox(rbX, rbY);
@@ -299,6 +321,9 @@ public class CustomController implements Initializable {
         {
             rasterManager.addCharForRasterBox(rbX, rbY, getSemChar());
         }
+        */
+
+        rbManager.setCharForRB(rbX, rbY, getSemChar());
 
         drawRaster();
         drawSemanticMap();
@@ -330,6 +355,12 @@ public class CustomController implements Initializable {
     private void cropImage()
     {
         // TODO check if image width and height are % raster == 0 -> crop on sides that do not eval 0
+    }
+
+    @FXML
+    private void startAnalyzing()
+    {
+        rbManager.startAnalyzation();
     }
 
     @FXML
@@ -384,48 +415,9 @@ public class CustomController implements Initializable {
                 }
             }
 
-            // TODO read pixelvalues from canvas
-            // canvas to image to read pixels
-            //WritableImage cMapImg = new WritableImage(imageHeight, imageHeight);
-            //cMap.snapshot(null, null, cMapImg);
-            //cMapImg.getPixelReader();
-
-            // TODO if pixelverschiebeung, load tile again, give cropped and dislted version to rastermanager
-            //Image transImg = new Image(imageHeight, imageHeight, null);
-            //transImg
-
-            // writeableimage to buffered image
-            // scale bufferediamge
-            // buffered image to fx image
-
-            //BufferedImage bImg = new BufferedImage(imageHeight, imageHeight, BufferedImage.TYPE_INT_ARGB);
-
-            //java.awt.Image xxx = bImg.getScaledInstance(currImageSideLength, currImageSideLength, 0);
-            //WritableImage scaledImg =  SwingFXUtils.toFXImage(bImg, null);
-
             GraphicsContext gMap = cMap.getGraphicsContext2D();
             gMap.clearRect(0,0, currImageSideLength, currImageSideLength);
             gMap.drawImage(croppedImg, 0,0, imageHeight, imageHeight, horizontalImageOffset, verticalImageOffset, currImageSideLength, currImageSideLength);
-
-
-            PixelReader prTrans = croppedImg.getPixelReader();
-
-            int startX = 0;
-            int startY = 0;
-
-            int endX = imageHeight;
-            int endY = imageHeight;
-
-            if(horizontalImageOffset < 0)
-                endX = 0;
-            //for(int y = )
-
-            //croppedImg.
-            // TODO draw image to cMap for offset
-            //ivMap.setImage(croppedImg);
-            //currDispImage = croppedImg;
-            rasterManager.setTile(croppedImg); // gets snapshot
-             // gets snapshot
 
 
             drawRaster();
@@ -444,19 +436,21 @@ public class CustomController implements Initializable {
         //gcSemMap.setStroke(Color.RED);
         gcSemMap.beginPath();
 
-        GameElemMenuEntries[][] semanticMap = rasterManager.getCharRepresentation();
+        //GameElemMenuEntries[][] semanticMap = rasterManager.getCharRepresentation();
+        GameElemMenuEntries[][] semanticMap = rbManager.getCharMap(tileNumber, rbOffset);
         //Map<Integer, GameElemMenuEntries> mapping = rasterManager.getGameElemMapping();
 
-        for(int i = 0; i < semanticMap.length; i++)
+        for(int width = 0; width < semanticMap.length; width++)
         {
-            for(int j = 0; j < semanticMap.length; j++)
+            for(int height = 0; height < semanticMap.length; height++)
             {
-                int x = (int) ((j * rbSideLength) + (rbSideLength / 2));
-                int y = (int) ((i * rbSideLength) + (rbSideLength / 2));
+                int x = (int) ((height * rbSideLength) + (rbSideLength / 2));
+                int y = (int) ((width * rbSideLength) + (rbSideLength / 2));
 
-                if(semanticMap[j][i] != null) {
-                    gcSemMap.setStroke(semanticMap[j][i].getColor());
-                    gcSemMap.strokeText("" + semanticMap[j][i].getChar(), y, x);
+                if(semanticMap[height][width] != null) {
+
+                    gcSemMap.setStroke(semanticMap[height][width].getColor());
+                    gcSemMap.strokeText("" + semanticMap[height][width].getChar(), x, y);
                 }
             }
         }
@@ -467,14 +461,15 @@ public class CustomController implements Initializable {
     @FXML
     private void saveTile()
     {
-        rasterManager.saveToFile(imageName, ""+tileNumber, ""+rbOffset);
+        //rasterManager.saveToFile(imageName, ""+tileNumber, ""+rbOffset);
     }
 
     @FXML
     private void changeRaster()
     {
         rbSideLength = cMap.getHeight() / getRasterSize();
-        rasterManager.setRasterSize(getRasterSize());
+        //rasterManager.setRasterSize(getRasterSize());
+        rbManager.setNumRBsHeight(getRasterSize());
         drawRaster();
 
         // TODO call nextrasterbox?
