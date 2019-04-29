@@ -35,6 +35,8 @@ public class RasterManager {
 
     // TODO set rasterSize() -> calls setTile()
 
+
+
     public void setRasterSize(int rasterSize)
     {
         this.rasterSize = rasterSize;
@@ -149,12 +151,16 @@ public class RasterManager {
     }
 
     public void saveToFile(String filename, String tileName, String rbOffset) {
-        try (PrintWriter out = new PrintWriter("src/main/semanticMaps/"+filename+"_rs"+rasterSize+"tn"+tileName+"ro"+rbOffset+".txt")) {
+
+        //String fname = filename.split(".")[0];
+
+        // PrintWriter out = new PrintWriter("src/main/semanticMaps/"+filename+"_rs"+rasterSize+"tn"+tileName+"ro"+rbOffset+".txt")
+        try (PrintWriter out = new PrintWriter("/Users/matthiasdaiber/Documents/Universitaet/SS19/code/dataset/tiles/SMB/"+filename+"_rs"+rasterSize+"tn"+tileName+"ro"+rbOffset+".txt")) {
 
             for (int i = 0; i < rasterSize; ++i) {
 
                 for (int j = 0; j < rasterSize; ++j) {
-                    out.print(charRepresentation[i][j]);
+                    out.print(charRepresentation[i][j].getChar());
 
                     if (j < rasterSize - 1)
                         out.print("; ");

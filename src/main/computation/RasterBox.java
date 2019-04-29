@@ -35,8 +35,6 @@ public class RasterBox {
 
     public int hashCode()
     {
-        // TODO possibly faulty because of hashmap ??? - fixed with sort
-
         List<Integer> values = new ArrayList<Integer>(numPixels.values());
         Collections.sort(values);
 

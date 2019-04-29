@@ -4,13 +4,14 @@ import javafx.scene.paint.Color;
 
 public enum GameElemMenuEntries {
 
-    BACKGROUND("Background", 'B', Color.BLACK),
+    BACKGROUND("Background", 'X', Color.BLACK),
+    BLOCK("Block", 'B', Color.RED),
     PLATFORM("Platform", 'P', Color.GREEN),
     INTERACTION("Interaktion", 'I', Color.BLUE),
+    COLLECTABLE("Collectable", 'C', Color.BROWN),
     TRAP("Trap", 'T', Color.YELLOW),
-    MOVING_PLATFORM("Mov. Pltf.", 'M', Color.GREY),
-    DISAPPEARING_PLATFORM("Disap. Pltf.", 'D', Color.AZURE),
-    ENEMY("Enemy", 'E', Color.RED);
+    MOVING_PLATFORM("Mov. Pltf.", 'M', Color.DARKORANGE),
+    DISAPPEARING_PLATFORM("Disap. Pltf.", 'D', Color.DARKGREY);
 
     private String name;
     private char semChar;

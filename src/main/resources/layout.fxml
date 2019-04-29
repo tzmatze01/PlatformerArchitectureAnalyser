@@ -14,6 +14,7 @@
                 <Label styleClass="label" text="Image Controls"/>
                 <HBox>
                     <ComboBox fx:id="cbRaster" onAction="#changeRaster" prefWidth="150.0" promptText="Choose Rastersize" />
+                    <!-- TextField fx:id="tfRaster" onAction="#changeRaster" prefWidth="150.0" / -->
                     <Button fx:id="bNextMap" onAction="#loadNextImage"></Button>
                 </HBox>
             </VBox>
@@ -30,6 +31,8 @@
                 <Label styleClass="label" text="Other"/>
                 <Button fx:id="bFirstTile" onAction="#loadFirstTile"></Button>
                 <Button fx:id="bSaveTile" onAction="#saveTile"></Button>
+
+                <Button fx:id="bNextTile" onAction="#loadNextTile"></Button>
             </VBox>
 
         </HBox>
@@ -58,7 +61,11 @@
             <!-- Tile -->
             <Label styleClass="label" text="Tiles"/>
             <HBox styleClass="hbox">
-                <Button fx:id="bNextTile" onAction="#loadNextTile"></Button>
+                <!--Button fx:id="bNextTile" onAction="#loadNextTile"></Button
+
+
+
+                -->
                 <Button fx:id="bPreviousTile" onAction="#loadPreviousTile"></Button>
             </HBox>
 
