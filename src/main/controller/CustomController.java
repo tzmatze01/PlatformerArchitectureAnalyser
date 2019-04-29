@@ -45,7 +45,7 @@ public class CustomController implements Initializable {
     private int horizontalImageOffset = 0;
     private int verticalImageOffset = 0;
 
-    private final int RESIZE_FACTOR = 3;
+    private final int RESIZE_FACTOR = 3; // resizes image ! is also used in calculation for offset et al.
 
     //private RasterManager rasterManager;
     private RBManager rbManager;
@@ -197,38 +197,35 @@ public class CustomController implements Initializable {
     @FXML
     private void moveImageUp()
     {
-        verticalImageOffset += 1;
+        verticalImageOffset -= RESIZE_FACTOR;
         loadTile();
-        //drawRaster();
-        rbManager.setMapOffset(horizontalImageOffset, verticalImageOffset);
-    }
-
-    @FXML
-    private void moveImageLeft()
-    {
-        horizontalImageOffset -= 1;
-        loadTile();
-        //drawRaster();
-        rbManager.setMapOffset(horizontalImageOffset, verticalImageOffset);
-    }
-
-    @FXML
-    private void moveImageRight()
-    {
-        horizontalImageOffset += 1;
-        loadTile();
-        //drawRaster();
-        rbManager.setMapOffset(horizontalImageOffset, verticalImageOffset);
+        rbManager.setMapOffset(horizontalImageOffset / RESIZE_FACTOR, verticalImageOffset / RESIZE_FACTOR);
     }
 
     @FXML
     private void moveImageDown()
     {
-        verticalImageOffset -= 1;
+        verticalImageOffset += RESIZE_FACTOR;
         loadTile();
-        //drawRaster();
-        rbManager.setMapOffset(horizontalImageOffset, verticalImageOffset);
+        rbManager.setMapOffset(horizontalImageOffset / RESIZE_FACTOR, verticalImageOffset / RESIZE_FACTOR);
     }
+
+    @FXML
+    private void moveImageLeft()
+    {
+        horizontalImageOffset += RESIZE_FACTOR;
+        loadTile();
+        rbManager.setMapOffset(horizontalImageOffset / RESIZE_FACTOR, verticalImageOffset / RESIZE_FACTOR);
+    }
+
+    @FXML
+    private void moveImageRight()
+    {
+        horizontalImageOffset -= RESIZE_FACTOR;
+        loadTile();
+        rbManager.setMapOffset(horizontalImageOffset / RESIZE_FACTOR, verticalImageOffset / RESIZE_FACTOR);
+    }
+
 
     @FXML
     private void loadNextImage()

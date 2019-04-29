@@ -114,7 +114,7 @@ public class RBManager {
         int hStart = (rasterBoxSideLength * height) + yMapOffset;
         int hEnd = hStart + rasterBoxSideLength;
 
-        System.out.println("yOffset: "+yMapOffset+ " xOffset: "+xMapOffset);
+        System.out.println("yOffset: "+yMapOffset+ " xOffset: "+xMapOffset+" rbslength: "+rasterBoxSideLength);
         // TODO also wStart > map.getWidth  && < 0
         if(wStart < 0)
             wStart = 0;
