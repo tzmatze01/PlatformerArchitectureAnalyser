@@ -114,7 +114,8 @@ public class RBManager {
         int hStart = (rasterBoxSideLength * height) + yMapOffset;
         int hEnd = hStart + rasterBoxSideLength;
 
-        System.out.println("yOffset: "+yMapOffset+ " xOffset: "+xMapOffset+" rbslength: "+rasterBoxSideLength);
+        //System.out.println("yOffset: "+yMapOffset+ " xOffset: "+xMapOffset+" rbslength: "+rasterBoxSideLength);
+
         // TODO also wStart > map.getWidth  && < 0
         if(wStart < 0)
             wStart = 0;
@@ -123,8 +124,11 @@ public class RBManager {
 
         if(hStart < 0)
             hStart = 0;
-        else if(wEnd > tileSideLength)
-            wEnd = tileSideLength;
+        else if(wEnd > map.getWidth())
+            wEnd = (int)map.getWidth();
+
+
+        //System.out.println("y: "+hStart+ " - "+hEnd+" x: "+wStart+" - "+wEnd);
 
         List<Color> pixels = new ArrayList<>();
 

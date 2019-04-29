@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2f4749a5-5d50-4eaf-af33-74cf72adcc20" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/src/main/computation/RBManager.java" afterPath="$PROJECT_DIR$/src/main/computation/RBManager.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/controller/CustomController.java" afterPath="$PROJECT_DIR$/src/main/controller/CustomController.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -33,7 +31,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CustomController.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CustomController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/controller/CustomController.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="119">
@@ -67,15 +65,18 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RBManager.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="RBManager.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/computation/RBManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="90" column="0" lean-forward="false" selection-start-line="90" selection-start-column="0" selection-end-line="90" selection-end-column="0" />
+            <state relative-caret-position="434">
+              <caret line="130" column="10" lean-forward="false" selection-start-line="130" selection-start-column="10" selection-end-line="130" selection-end-column="10" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1666#1667#0" expanded="true" />
                 <element signature="e#1699#1700#0" expanded="true" />
+                <element signature="method#getNumRBs#0;class#RBManager#0" expanded="false" />
+                <element signature="method#getNumMarkedRBs#0;class#RBManager#0" expanded="false" />
+                <element signature="method#getCharMap#0;class#RBManager#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -174,8 +175,8 @@
         <option value="$PROJECT_DIR$/src/main/computation/RasterManager.java" />
         <option value="$PROJECT_DIR$/src/main/computation/RasterBox.java" />
         <option value="$PROJECT_DIR$/src/main/resources/layout.fxml" />
-        <option value="$PROJECT_DIR$/src/main/computation/RBManager.java" />
         <option value="$PROJECT_DIR$/src/main/controller/CustomController.java" />
+        <option value="$PROJECT_DIR$/src/main/computation/RBManager.java" />
       </list>
     </option>
   </component>
@@ -424,12 +425,12 @@
       <workItem from="1553081187705" duration="5009000" />
       <workItem from="1554549440295" duration="9023000" />
       <workItem from="1554718525791" duration="23237000" />
-      <workItem from="1556394649132" duration="19441000" />
+      <workItem from="1556394649132" duration="20011000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="117372000" />
+    <option name="totallyTimeSpent" value="117942000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1814" y="128" width="1680" height="975" extended-state="0" />
@@ -842,18 +843,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/computation/RBManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="90" column="0" lean-forward="false" selection-start-line="90" selection-start-column="0" selection-end-line="90" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1666#1667#0" expanded="true" />
-            <element signature="e#1699#1700#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/controller/CustomController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
@@ -869,6 +858,21 @@
             <element signature="e#10124#10125#0" expanded="true" />
             <element signature="method#loadFirstTile#0;class#CustomController#0" expanded="false" />
             <element signature="method#previousRasterBox#0;class#CustomController#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/computation/RBManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="434">
+          <caret line="130" column="10" lean-forward="false" selection-start-line="130" selection-start-column="10" selection-end-line="130" selection-end-column="10" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1666#1667#0" expanded="true" />
+            <element signature="e#1699#1700#0" expanded="true" />
+            <element signature="method#getNumRBs#0;class#RBManager#0" expanded="false" />
+            <element signature="method#getNumMarkedRBs#0;class#RBManager#0" expanded="false" />
+            <element signature="method#getCharMap#0;class#RBManager#0" expanded="false" />
           </folding>
         </state>
       </provider>
