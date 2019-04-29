@@ -9,12 +9,16 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import main.computation.RBManager;
 import main.enums.CharActionsMenuEntries;
 import main.enums.GameElemMenuEntries;
@@ -75,6 +79,9 @@ public class CustomController implements Initializable {
     @FXML
     private StackPane spSemMap;
 
+    @FXML
+    private StackPane spLog;
+
     /*
             IMAGEVIEW
      */
@@ -132,19 +139,13 @@ public class CustomController implements Initializable {
     private ComboBox cbAction;
 
     /*
-            TEXTFIELD
+            LABEL
      */
-    @FXML
-    private TextField tfLog;
 
-    //@FXML
-    //private TextField tfRaster;
+    private Text tLog;
 
-    /*
+    private Text tRBsFound;
 
-    TODO  label : offset, how many RBs marked
-    TODO button: start analyzing,
-     */
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -177,6 +178,20 @@ public class CustomController implements Initializable {
         bPixelLeft.setText("Left");
         bPixelRight.setText("Right");
         bPixelDown.setText("Down");
+
+        tLog = new Text(300, 100, "");
+        tLog.setFont(Font.font ("Arial", 20));
+        tLog.setFill(Color.BLACK);
+
+        tRBsFound = new Text(300, 40, "0 RBs marked.");
+        tRBsFound.setFont(Font.font ("Arial", 20));
+        tRBsFound.setFill(Color.BLACK);
+
+        VBox vbLog = new VBox();
+        vbLog.getChildren().add(tRBsFound);
+        vbLog.getChildren().add(tLog);
+
+        spLog.getChildren().add(vbLog);
 
         cbRaster.setItems(FXCollections.observableArrayList(RasterSizeMenuEntries.values()));
         cbRaster.getSelectionModel().selectFirst();
@@ -278,6 +293,7 @@ public class CustomController implements Initializable {
             @Override
             public void handle(MouseEvent event) {
                 identifyRasterBox(event.getX(), event.getY());
+                updateLabels();
             }
         });
 
@@ -286,8 +302,19 @@ public class CustomController implements Initializable {
             @Override
             public void handle(MouseEvent event) {
                 identifyRasterBox(event.getX(), event.getY());
+                updateLabels();
             }
         });
+    }
+
+    private void updateLabels()
+    {
+        tRBsFound.setText("Marked "+rbManager.getNumMarkedRBs()+" / "+rbManager.getNumRBs()+" Rasterblocks");
+
+        if(rbManager.getNumMarkedRBs() == rbManager.getNumRBs())
+            tRBsFound.setFill(Color.GREEN);
+        else
+            tRBsFound.setFill(Color.BLACK);
     }
 
     private void identifyRasterBox(double x, double y)
@@ -302,11 +329,17 @@ public class CustomController implements Initializable {
         int rbX = (int ) (x / rasterBoxSide);
         int rbY = (int ) (y / rasterBoxSide);
 
+        /*
+        Not needed, because next calculation does the same if rbOffset > getRasterSize()
+        this might cause problems with loadPreviousTile ?
+
         if(rbX + rbOffset > getRasterSize())
             tmpTileNumber++;
         else
             rbX += rbOffset;
+        */
 
+        rbX += rbOffset;
         rbX += tmpTileNumber * getRasterSize();
 
         /*
@@ -328,7 +361,6 @@ public class CustomController implements Initializable {
 
     private GameElemMenuEntries getSemChar()
     {
-        //char semChar = GameElemMenuEntries.BACKGROUND.getChar();
         GameElemMenuEntries geme = GameElemMenuEntries.BACKGROUND;
 
         if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.INTERACTION.toString()))
@@ -357,7 +389,9 @@ public class CustomController implements Initializable {
     @FXML
     private void startAnalyzing()
     {
-        rbManager.startAnalyzation();
+        String mssg = rbManager.startAnalyzation();
+
+        tLog.setText(mssg);
     }
 
     @FXML

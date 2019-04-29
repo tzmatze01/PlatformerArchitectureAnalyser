@@ -60,9 +60,11 @@ public class RBManager {
     The creation of hashes for all RBs should start manually via a button, because the createn of hashes is
     time consuming
      */
-    public void startAnalyzation()
+    public String startAnalyzation()
     {
         initRasterBoxes();
+
+        return "Initialised Raster-Map.";
     }
 
     public void setCharForRB(int widthRB, int heightRB, GameElemMenuEntries geme)
@@ -100,9 +102,6 @@ public class RBManager {
                 rasterBoxHashes[wBox][hBox] = analyseRasterBox(wBox, hBox);
             }
         }
-
-
-        System.out.println("Initialised Raster-Map.");
     }
 
     private int analyseRasterBox(int width, int height)
@@ -120,9 +119,9 @@ public class RBManager {
         int hStart = (rasterBoxSideLength * height) - yMapOffset;
         int hEnd = hStart + rasterBoxSideLength;
 
-        System.out.println("yOffset: "+yMapOffset+ " xOffset: "+xMapOffset+" rbslength: "+rasterBoxSideLength);
-        System.out.println("yStart: "+hStart+ " yEnd: "+hEnd);
-        System.out.println("xStart: "+wStart+ " xEnd: "+wEnd+"\n");
+        //System.out.println("yOffset: "+yMapOffset+ " xOffset: "+xMapOffset+" rbslength: "+rasterBoxSideLength);
+        //System.out.println("yStart: "+hStart+ " yEnd: "+hEnd);
+        //System.out.println("xStart: "+wStart+ " xEnd: "+wEnd+"\n");
 
         // TODO also wStart > map.getWidth  && < 0
         if(wStart < 0)

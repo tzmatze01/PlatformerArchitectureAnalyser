@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.text.Text?>
 <BorderPane styleClass="header-section" maxHeight="800.0" maxWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.CustomController">
 
 
@@ -81,6 +82,7 @@
                 <Button fx:id="bPixelRight" onAction="#moveImageRight"></Button>
             </HBox>
             <Button fx:id="bPixelDown" onAction="#moveImageDown"></Button>
+
         </VBox>
 
     </right>
@@ -88,7 +90,8 @@
 
     <bottom>
         <!-- to print log output -->
-        <TextField fx:id="tfLog"/>
+        <StackPane fx:id="spLog" id="spMap"></StackPane>
+
 
     </bottom>
 </BorderPane>
