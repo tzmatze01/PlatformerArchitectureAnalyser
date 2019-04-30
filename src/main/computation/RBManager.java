@@ -90,8 +90,8 @@ public class RBManager {
         this.numRBsWidth = (int)(map.getWidth() / rasterBoxSideLength);
 
         // for the rest of the division above should also be a RB
-        if(map.getWidth() % rasterBoxSideLength != 0)
-            numRBsWidth += 1;
+        //if(map.getWidth() % rasterBoxSideLength != 0)
+        //    numRBsWidth += 1;
 
         this.rasterBoxHashes = new int[numRBsWidth][numRBsHeight];
 
@@ -148,6 +148,16 @@ public class RBManager {
         //System.out.println("RB x:"+width+" y:"+height+" has "+pixels.size()+" pixels!");
 
         return new RasterBox(pixels).hashCode();
+    }
+
+    public int getNumRBsWidth()
+    {
+        return numRBsWidth;
+    }
+
+    public int getNumRBsHeight()
+    {
+        return numRBsHeight;
     }
 
     public int getNumRBs()

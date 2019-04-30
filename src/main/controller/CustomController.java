@@ -28,7 +28,9 @@ import main.enums.RasterSizeMenuEntries;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -106,7 +108,7 @@ public class CustomController implements Initializable {
     private Button bFirstTile;
 
     @FXML
-    private Button bSaveTile;
+    private Button bCreateDS;
 
     @FXML
     private Button bNextRasterBox;
@@ -171,7 +173,7 @@ public class CustomController implements Initializable {
         bNextTile.setText("Load Next Tile");
         bPreviousTile.setText("Load Previous Tile");
         bFirstTile.setText("Load First Tile");
-        bSaveTile.setText("Save Tile");
+        bCreateDS.setText("Create Dataset");
         bNextRasterBox.setText("Load next RB");
         bPreviousRasterBox.setText("Load previous RB");
         bPixelUp.setText("Up");
@@ -252,21 +254,25 @@ public class CustomController implements Initializable {
 
         imageHeight = (int) currImage.getHeight();
 
-        // imageName = "test";
         imageName = listOfFiles.get(currFileIndex).getName();
+
+        tLog.setFill(Color.BLACK);
+        tLog.setText("Loaded "+imageName);
 
         rbManager.setMap(currImage);
 
         ++currFileIndex;
         if(currFileIndex >= listOfFiles.size()) {
-            System.out.println("seen all images");
+
+            tLog.setFill(Color.RED);
+            tLog.setText("Loaded last image "+imageName);
+
             currFileIndex = 0;
         }
 
         // canvases need to be initiaised for every new iage, to fit proportions of img
         initCanvases();
 
-        //if(ivMap.getImage() == null)
         loadFirstTile();
     }
 
@@ -471,17 +477,30 @@ public class CustomController implements Initializable {
         GameElemMenuEntries[][] semanticMap = rbManager.getCharMap(tileNumber, rbOffset);
         //Map<Integer, GameElemMenuEntries> mapping = rasterManager.getGameElemMapping();
 
+        // TODO set to getraster
         for(int width = 0; width < semanticMap.length; width++)
         {
             for(int height = 0; height < semanticMap.length; height++)
             {
-                int x = (int) ((height * rbSideLength) + (rbSideLength / 2));
-                int y = (int) ((width * rbSideLength) + (rbSideLength / 2));
 
                 if(semanticMap[height][width] != null) {
 
+                    int x = (int) ((height * rbSideLength) + (rbSideLength / 2));
+                    int y = (int) ((width * rbSideLength) + (rbSideLength / 2));
+
                     gcSemMap.setStroke(semanticMap[height][width].getColor());
                     gcSemMap.strokeText("" + semanticMap[height][width].getChar(), x, y);
+                }
+                else
+                {
+                    // draw red square to signal missing char
+
+                    int x = (int) (height * rbSideLength);
+                    int y = (int) (width * rbSideLength);
+
+                    gcSemMap.setFill(Color.RED);
+                    gcSemMap.fillRect(x, y, rbSideLength, rbSideLength);
+
                 }
             }
         }
@@ -490,9 +509,67 @@ public class CustomController implements Initializable {
     }
 
     @FXML
-    private void saveTile()
+    private void createDataset()
     {
-        //rasterManager.saveToFile(imageName, ""+tileNumber, ""+rbOffset);
+        /*
+        Generates a dataset with a moving raster-window over the full map.
+        When the window reaches the end of the map-image, the raster-offset is incremented
+        until raster-offset == getRaserSize().
+        This creates all possible tiles of this map.
+         */
+
+        int numTiles = rbManager.getNumRBsWidth() / getRasterSize();
+
+        if(rbManager.getNumRBs() == rbManager.getNumMarkedRBs())
+        {
+            for(int rbo = 0; rbo < getRasterSize(); rbo++)
+            {
+                for(int t = 0; t < numTiles; t++)
+                {
+                    GameElemMenuEntries[][] geme = rbManager.getCharMap(t, rbo);
+
+                    System.out.println("bounds are RBs width on map: "+rbManager.getNumRBsWidth()+" and rastersize: "+getRasterSize()+"\n");
+
+                    // TODO geme has fixed length, with null entries - find something other
+                    // TODO tiles are wrong driection
+                    
+                    // check if geme is empty -> requested tile window is out of bounds, will not be saved.
+                    if(geme.length == 0) {
+                        System.out.println("requested window for tile: " + t + " with rbOffset: " + rbo + " is out of map bounds.");
+                    }
+                    else
+                        saveToFile(""+t, ""+rbo, geme);
+                }
+            }
+        }
+        else {
+            tLog.setFill(Color.RED);
+            tLog.setText("Please mark all Rasterboxes before dataset can be created.");
+        }
+    }
+
+    private void saveToFile(String tileName, String rbOffset, GameElemMenuEntries[][] charRepresentation) {
+
+        // cut off file extension
+        String fname = imageName.substring(0, imageName.lastIndexOf('.'));
+
+
+        // PrintWriter out = new PrintWriter("src/main/semanticMaps/"+filename+"_rs"+rasterSize+"tn"+tileName+"ro"+rbOffset+".txt")
+        try (PrintWriter out = new PrintWriter("/Users/matthiasdaiber/Documents/Universitaet/SS19/code/dataset/tiles/SMB/"+fname+"_rs"+getRasterSize()+"tn"+tileName+"rbo"+rbOffset+".txt")) {
+
+            for (int i = 0; i < getRasterSize(); ++i) {
+
+                for (int j = 0; j < getRasterSize(); ++j) {
+                    out.print(charRepresentation[i][j].getChar());
+
+                    if (j < getRasterSize() - 1)
+                        out.print("; ");
+                }
+                out.println();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

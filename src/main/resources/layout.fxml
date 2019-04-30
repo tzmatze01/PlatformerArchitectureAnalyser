@@ -32,7 +32,7 @@
             <VBox styleClass="vbox">
                 <Label styleClass="label" text="Other"/>
                 <Button fx:id="bFirstTile" onAction="#loadFirstTile"></Button>
-                <Button fx:id="bSaveTile" onAction="#saveTile"></Button>
+                <Button fx:id="bCreateDS" onAction="#createDataset"></Button>
 
             </VBox>
 

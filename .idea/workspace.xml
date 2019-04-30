@@ -33,15 +33,30 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CustomController.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="CustomController.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/controller/CustomController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="392" column="0" lean-forward="false" selection-start-line="392" selection-start-column="0" selection-end-line="392" selection-end-column="0" />
+            <state relative-caret-position="289">
+              <caret line="534" column="20" lean-forward="false" selection-start-line="534" selection-start-column="20" selection-end-line="534" selection-end-column="20" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="method#initCanvases#0;class#CustomController#0" expanded="false" />
                 <element signature="method#loadFirstTile#0;class#CustomController#0" expanded="false" />
                 <element signature="method#previousRasterBox#0;class#CustomController#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RasterManager.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/computation/RasterManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="464">
+              <caret line="172" column="5" lean-forward="true" selection-start-line="152" selection-start-column="4" selection-end-line="172" selection-end-column="5" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#3240#3241#0" expanded="true" />
+                <element signature="e#3283#3284#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -53,23 +68,25 @@
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="92" column="44" lean-forward="false" selection-start-line="92" selection-start-column="44" selection-end-line="92" selection-end-column="44" />
+            <state relative-caret-position="119">
+              <caret line="34" column="66" lean-forward="false" selection-start-line="34" selection-start-column="53" selection-end-line="34" selection-end-column="66" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RBManager.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="RBManager.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/computation/RBManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="327">
-              <caret line="123" column="10" lean-forward="false" selection-start-line="123" selection-start-column="10" selection-end-line="123" selection-end-column="10" />
+            <state relative-caret-position="437">
+              <caret line="207" column="17" lean-forward="true" selection-start-line="207" selection-start-column="17" selection-end-line="207" selection-end-column="17" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#getNumRBs#0;class#RBManager#0" expanded="false" />
+                <element signature="e#4738#4739#0" expanded="true" />
+                <element signature="e#4772#4773#0" expanded="true" />
+                <element signature="e#4812#4813#0" expanded="true" />
+                <element signature="e#4847#4848#0" expanded="true" />
                 <element signature="method#getNumMarkedRBs#0;class#RBManager#0" expanded="false" />
-                <element signature="method#getCharMap#0;class#RBManager#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -132,13 +149,13 @@
       <find>currImage</find>
       <find>cMap</find>
       <find>identifyRasterBox</find>
-      <find>save</find>
       <find>load</find>
       <find>rasterBoxHashes</find>
       <find>getSemChar</find>
-      <find>rasterBoxSideLength</find>
       <find>sp</find>
       <find>start</find>
+      <find>save</find>
+      <find>rasterBoxSideLength</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -170,8 +187,8 @@
         <option value="$PROJECT_DIR$/src/main/computation/RasterBox.java" />
         <option value="$PROJECT_DIR$/src/main/Main.java" />
         <option value="$PROJECT_DIR$/src/main/resources/layout.fxml" />
-        <option value="$PROJECT_DIR$/src/main/controller/CustomController.java" />
         <option value="$PROJECT_DIR$/src/main/computation/RBManager.java" />
+        <option value="$PROJECT_DIR$/src/main/controller/CustomController.java" />
       </list>
     </option>
   </component>
@@ -182,8 +199,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-1937" />
-    <option name="y" value="219" />
+    <option name="x" value="-1920" />
+    <option name="y" value="57" />
     <option name="width" value="1680" />
     <option name="height" value="975" />
   </component>
@@ -420,15 +437,16 @@
       <workItem from="1553081187705" duration="5009000" />
       <workItem from="1554549440295" duration="9023000" />
       <workItem from="1554718525791" duration="23237000" />
-      <workItem from="1556394649132" duration="25178000" />
+      <workItem from="1556394649132" duration="29327000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="123109000" />
+    <option name="totallyTimeSpent" value="127258000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1937" y="219" width="1680" height="975" extended-state="0" />
+    <frame x="-1920" y="57" width="1680" height="975" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -436,7 +454,7 @@
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2659091" sideWeight="0.51221" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2659091" sideWeight="0.51221" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2659091" sideWeight="0.48779" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32954547" sideWeight="0.497558" order="10" side_tool="false" content_ui="tabs" />
@@ -562,6 +580,7 @@
           <caret line="126" column="9" lean-forward="true" selection-start-line="126" selection-start-column="9" selection-end-line="126" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#initCanvases#0;class#CustomController#0" expanded="false" />
             <element signature="method#loadFirstTile#0;class#CustomController#0" expanded="false" />
             <element signature="method#previousRasterBox#0;class#CustomController#0" expanded="false" />
           </folding>
@@ -642,6 +661,7 @@
           <caret line="18" column="38" lean-forward="true" selection-start-line="18" selection-start-column="38" selection-end-line="18" selection-end-column="38" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#initCanvases#0;class#CustomController#0" expanded="false" />
             <element signature="method#loadFirstTile#0;class#CustomController#0" expanded="false" />
             <element signature="method#previousRasterBox#0;class#CustomController#0" expanded="false" />
           </folding>
@@ -711,6 +731,7 @@
           <caret line="307" column="62" lean-forward="false" selection-start-line="307" selection-start-column="62" selection-end-line="307" selection-end-column="62" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#initCanvases#0;class#CustomController#0" expanded="false" />
             <element signature="method#loadFirstTile#0;class#CustomController#0" expanded="false" />
             <element signature="method#previousRasterBox#0;class#CustomController#0" expanded="false" />
           </folding>
@@ -766,18 +787,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/computation/RasterManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="818">
-          <caret line="102" column="58" lean-forward="true" selection-start-line="102" selection-start-column="58" selection-end-line="102" selection-end-column="58" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3240#3241#0" expanded="true" />
-            <element signature="e#3283#3284#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/computation/RasterBox.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="379">
@@ -798,17 +807,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/layout.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="92" column="44" lean-forward="false" selection-start-line="92" selection-start-column="44" selection-end-line="92" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/styling.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="434">
@@ -817,27 +815,53 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/controller/CustomController.java">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/layout.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="392" column="0" lean-forward="false" selection-start-line="392" selection-start-column="0" selection-end-line="392" selection-end-column="0" />
+        <state relative-caret-position="119">
+          <caret line="34" column="66" lean-forward="false" selection-start-line="34" selection-start-column="53" selection-end-line="34" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/computation/RasterManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="464">
+          <caret line="172" column="5" lean-forward="true" selection-start-line="152" selection-start-column="4" selection-end-line="172" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#loadFirstTile#0;class#CustomController#0" expanded="false" />
-            <element signature="method#previousRasterBox#0;class#CustomController#0" expanded="false" />
+            <element signature="e#3240#3241#0" expanded="true" />
+            <element signature="e#3283#3284#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/computation/RBManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="327">
-          <caret line="123" column="10" lean-forward="false" selection-start-line="123" selection-start-column="10" selection-end-line="123" selection-end-column="10" />
+        <state relative-caret-position="437">
+          <caret line="207" column="17" lean-forward="true" selection-start-line="207" selection-start-column="17" selection-end-line="207" selection-end-column="17" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#getNumRBs#0;class#RBManager#0" expanded="false" />
+            <element signature="e#4738#4739#0" expanded="true" />
+            <element signature="e#4772#4773#0" expanded="true" />
+            <element signature="e#4812#4813#0" expanded="true" />
+            <element signature="e#4847#4848#0" expanded="true" />
             <element signature="method#getNumMarkedRBs#0;class#RBManager#0" expanded="false" />
-            <element signature="method#getCharMap#0;class#RBManager#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/controller/CustomController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="534" column="20" lean-forward="false" selection-start-line="534" selection-start-column="20" selection-end-line="534" selection-end-column="20" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#initCanvases#0;class#CustomController#0" expanded="false" />
+            <element signature="method#loadFirstTile#0;class#CustomController#0" expanded="false" />
+            <element signature="method#previousRasterBox#0;class#CustomController#0" expanded="false" />
           </folding>
         </state>
       </provider>
