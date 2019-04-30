@@ -528,11 +528,11 @@ public class CustomController implements Initializable {
                 {
                     GameElemMenuEntries[][] geme = rbManager.getCharMap(t, rbo);
 
-                    System.out.println("bounds are RBs width on map: "+rbManager.getNumRBsWidth()+" and rastersize: "+getRasterSize()+"\n");
+                    // System.out.println("bounds are RBs width on map: "+rbManager.getNumRBsWidth()+" and rastersize: "+getRasterSize()+"\n");
 
                     // TODO geme has fixed length, with null entries - find something other
                     // TODO tiles are wrong driection
-                    
+
                     // check if geme is empty -> requested tile window is out of bounds, will not be saved.
                     if(geme.length == 0) {
                         System.out.println("requested window for tile: " + t + " with rbOffset: " + rbo + " is out of map bounds.");
@@ -560,7 +560,7 @@ public class CustomController implements Initializable {
             for (int i = 0; i < getRasterSize(); ++i) {
 
                 for (int j = 0; j < getRasterSize(); ++j) {
-                    out.print(charRepresentation[i][j].getChar());
+                    out.print(charRepresentation[j][i].getChar());
 
                     if (j < getRasterSize() - 1)
                         out.print("; ");

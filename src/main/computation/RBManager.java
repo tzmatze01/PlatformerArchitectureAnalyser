@@ -182,6 +182,7 @@ public class RBManager {
         return marked;
     }
 
+    // returns geme with length 0 if requested tile-window is out of bounds from map
     public GameElemMenuEntries[][] getCharMap(int tileNumber, int rbOffset)
     {
         GameElemMenuEntries[][] gemes = new GameElemMenuEntries[numRBsHeight][numRBsHeight];
@@ -203,8 +204,12 @@ public class RBManager {
                     tmpWidth++;
                 }
             }
+
+            //System.out.println("Returns geme for tile: "+tileNumber+" rbo: "+rbOffset);
+            return gemes;
         }
 
-        return gemes;
+        System.out.println("Returns null for tile: "+tileNumber+" rbo: "+rbOffset);
+        return new GameElemMenuEntries[0][0];
     }
  }
