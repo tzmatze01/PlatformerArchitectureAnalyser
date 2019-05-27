@@ -155,7 +155,7 @@ public class CustomController implements Initializable {
         listOfFiles = new ArrayList<>();
 
         // load Folder with images
-        File folder = new File("/Users/matthiasdaiber/Documents/Universitaet/SS19/code/maps/SMB/valid");
+        File folder = new File("/Users/matthiasdaiber/Documents/Universitaet/SS19/images/maps/SMB/valid");
         File[] tmpFiles = folder.listFiles();
 
         for(File f : tmpFiles)
@@ -280,6 +280,7 @@ public class CustomController implements Initializable {
     private void initCanvases()
     {
         currImageSideLength = (int) currImage.getHeight() * RESIZE_FACTOR;
+        rbSideLength = currImageSideLength / getRasterSize();
 
         ivMap.setFitHeight(currImageSideLength);
         ivMap.setFitWidth(currImageSideLength);
@@ -288,8 +289,9 @@ public class CustomController implements Initializable {
         cMap = new Canvas(currImageSideLength, currImageSideLength);
         cSemMap = new Canvas(currImageSideLength, currImageSideLength);
 
-
-        rbSideLength = currImageSideLength / getRasterSize();
+        // delete all children before adding new - after 2 images old canvas overlaps with new one
+        spMap.getChildren().clear();
+        spSemMap.getChildren().clear();
 
         spMap.getChildren().add(cMap);
         spSemMap.getChildren().add(cSemMap);
@@ -403,6 +405,7 @@ public class CustomController implements Initializable {
     @FXML
     private void loadFirstTile()
     {
+        rbOffset = 0;
         tileNumber = 0;
         loadTile();
     }
@@ -469,13 +472,9 @@ public class CustomController implements Initializable {
         // TODO char size relativ to rastersize
 
         GraphicsContext gcSemMap = cSemMap.getGraphicsContext2D();
-
-        //gcSemMap.setStroke(Color.RED);
         gcSemMap.beginPath();
 
-        //GameElemMenuEntries[][] semanticMap = rasterManager.getCharRepresentation();
         GameElemMenuEntries[][] semanticMap = rbManager.getCharMap(tileNumber, rbOffset);
-        //Map<Integer, GameElemMenuEntries> mapping = rasterManager.getGameElemMapping();
 
         // TODO set to getraster
         for(int width = 0; width < semanticMap.length; width++)
@@ -530,9 +529,6 @@ public class CustomController implements Initializable {
 
                     // System.out.println("bounds are RBs width on map: "+rbManager.getNumRBsWidth()+" and rastersize: "+getRasterSize()+"\n");
 
-                    // TODO geme has fixed length, with null entries - find something other
-                    // TODO tiles are wrong driection
-
                     // check if geme is empty -> requested tile window is out of bounds, will not be saved.
                     if(geme.length == 0) {
                         System.out.println("requested window for tile: " + t + " with rbOffset: " + rbo + " is out of map bounds.");
@@ -553,8 +549,6 @@ public class CustomController implements Initializable {
         // cut off file extension
         String fname = imageName.substring(0, imageName.lastIndexOf('.'));
 
-
-        // PrintWriter out = new PrintWriter("src/main/semanticMaps/"+filename+"_rs"+rasterSize+"tn"+tileName+"ro"+rbOffset+".txt")
         try (PrintWriter out = new PrintWriter("/Users/matthiasdaiber/Documents/Universitaet/SS19/code/dataset/tiles/SMB/"+fname+"_rs"+getRasterSize()+"tn"+tileName+"rbo"+rbOffset+".txt")) {
 
             for (int i = 0; i < getRasterSize(); ++i) {
@@ -632,8 +626,6 @@ public class CustomController implements Initializable {
             //gcMap.clearRect(0,0, currImageSideLength, currImageSideLength);
             gcSemMap.clearRect(0,0, currImageSideLength, currImageSideLength);
 
-            //gcMap.drawImage(currDispImage, 0,0, imageHeight, imageHeight, horizontalImageOffset, verticalImageOffset, currImageSideLength, currImageSideLength);
-            //rasterManager.setTile(cMap.snapshot(null, null));
 
             gcMap.setStroke(Color.RED);
             gcSemMap.setStroke(Color.RED);
