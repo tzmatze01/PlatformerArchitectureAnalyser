@@ -564,10 +564,11 @@ public class CustomController implements Initializable {
     @FXML
     private void changeRaster()
     {
-        rbSideLength = cMap.getHeight() / getRasterSize();
-        //rasterManager.setRasterSize(getRasterSize());
-        rbManager.setNumRBsHeight(getRasterSize());
-        drawRaster();
+        
+            rbSideLength = cMap.getHeight() / getRasterSize();
+            //rasterManager.setRasterSize(getRasterSize());
+            rbManager.setNumRBsHeight(getRasterSize());
+            drawRaster();
 
         // TODO call nextrasterbox?
     }

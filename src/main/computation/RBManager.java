@@ -13,27 +13,22 @@ import java.util.List;
 public class RBManager {
 
     // offset for map
-    private int xOffset;
-    private int yOffset;
+    private int xOffset = 0;
+    private int yOffset = 0;
 
     private Image map;
 
     private PixelReader pixelReader;
 
-    private int rbLength;
+    private int rbLength = 0;
 
-    private int[][] rbMatrix;
-    private int mHeight;
-    private int mWidth;
-
-
-    private HashMap<Integer, SymbolEnum> rbStorage; // saves Chars-Hashes over all maps during runtime
+    private int[][] rbMatrix = new int[0][0];
+    private int mHeight = 0;
+    private int mWidth = 0;
 
 
-    public RBManager() {
-        this.rbStorage = new HashMap<>();
-        this.rbMatrix = new int[0][0]; // init with 0 if getNumRBs is called early
-    }
+    private HashMap<Integer, SymbolEnum> rbStorage = new HashMap<>(); // saves Chars-Hashes over all maps during runtime
+
 
     public void setMap(Image map)
     {
@@ -66,27 +61,21 @@ public class RBManager {
      */
     public String startAnalyzation()
     {
-        //initRasterBoxes();
+        if(mHeight != 0 && rbLength != 0) {
 
-        // initialize rasterBoxes
+            this.mWidth = (int) (map.getWidth() / rbLength);
+            this.rbMatrix = new int[mWidth][mHeight];
 
-        this.mWidth = (int)(map.getWidth() / rbLength);
-
-        // for the rest of the division above should also be a RB
-        //if(map.getWidth() % rbLength != 0)
-        //    mWidth += 1;
-
-        this.rbMatrix = new int[mWidth][mHeight];
-
-        for(int wBox = 0; wBox < mWidth; wBox++)
-        {
-            for(int hBox = 0; hBox < mHeight; hBox++)
-            {
-                rbMatrix[wBox][hBox] = analyseRasterBox(wBox, hBox);
+            for (int wBox = 0; wBox < mWidth; wBox++) {
+                for (int hBox = 0; hBox < mHeight; hBox++) {
+                    rbMatrix[wBox][hBox] = analyseRasterBox(wBox, hBox);
+                }
             }
-        }
 
-        return "Initialised Raster-Map.";
+            return "Initialised RasterBlock Matrix.";
+        }
+        else
+            return "Error. Raster size not set.";
     }
 
     public void setCharForRB(int widthRB, int heightRB, SymbolEnum geme)
