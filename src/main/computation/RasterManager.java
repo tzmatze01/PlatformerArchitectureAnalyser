@@ -3,7 +3,8 @@ package main.computation;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
-import main.enums.GameElemMenuEntries;
+import main.enums.SymbolEnum;
+import main.model.RasterBox;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -18,8 +19,8 @@ public class RasterManager {
     private PixelReader pixelReader;
 
     private Map<Integer, Character>  rasterboxCharMap; // key : rasterbox hash, value : char representation
-    private Map<Integer, GameElemMenuEntries>  hashGameElemMap; // key : rasterbox hash, value : char representation
-    private GameElemMenuEntries[][] charRepresentation;
+    private Map<Integer, SymbolEnum>  hashGameElemMap; // key : rasterbox hash, value : char representation
+    private SymbolEnum[][] charRepresentation;
 
     private int rasterSize;
     private int tileSideLength;
@@ -30,7 +31,7 @@ public class RasterManager {
         this.rasterSize = rasterSize;
         //this.rasterboxCharMap = new HashMap<>();
         this.hashGameElemMap = new HashMap<>();
-        this.charRepresentation = new GameElemMenuEntries[rasterSize][rasterSize];
+        this.charRepresentation = new SymbolEnum[rasterSize][rasterSize];
     }
 
     // TODO set rasterSize() -> calls setTile()
@@ -42,7 +43,7 @@ public class RasterManager {
         this.rasterSize = rasterSize;
         this.rasterBoxSideLength = tileSideLength / rasterSize;
 
-        this.charRepresentation = new GameElemMenuEntries[rasterSize][rasterSize];
+        this.charRepresentation = new SymbolEnum[rasterSize][rasterSize];
 
         analyseTile();
     }
@@ -58,7 +59,7 @@ public class RasterManager {
         this.tileSideLength = (int) tile.getWidth();
         this.rasterBoxSideLength = tileSideLength / rasterSize;
 
-        this.charRepresentation = new GameElemMenuEntries[rasterSize][rasterSize];
+        this.charRepresentation = new SymbolEnum[rasterSize][rasterSize];
 
         analyseTile();
     }
@@ -100,18 +101,18 @@ public class RasterManager {
         return new RasterBox(pixels).hashCode();
     }
 
-    public GameElemMenuEntries[][] getCharRepresentation()
+    public SymbolEnum[][] getCharRepresentation()
     {
         //printSemMap();
         return this.charRepresentation;
     }
 
-    public Map<Integer, GameElemMenuEntries> getGameElemMapping()
+    public Map<Integer, SymbolEnum> getGameElemMapping()
     {
         return this.hashGameElemMap;
     }
 
-    public void addCharForRasterBox(int x, int y, GameElemMenuEntries geme)//char c)
+    public void addCharForRasterBox(int x, int y, SymbolEnum geme)//char c)
     {
         int hash = analyseRasterBox(x, y);
 

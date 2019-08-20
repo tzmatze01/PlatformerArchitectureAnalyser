@@ -1,16 +1,15 @@
 package main.enums;
 
-public enum CharActionsMenuEntries {
+public enum ActionEnum {
 
     ADD("Add"),
     DELETE("Delete");
 
     private String description;
 
-    CharActionsMenuEntries(String description)
+    ActionEnum(String description)
     {
         this.description = description;
     }
-
 
 }

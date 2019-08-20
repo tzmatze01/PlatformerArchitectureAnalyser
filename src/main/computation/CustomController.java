@@ -1,7 +1,6 @@
-package main.controller;
+package main.computation;
 
 import javafx.collections.FXCollections;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,8 +8,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -19,22 +16,16 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import main.computation.RBManager;
-import main.enums.CharActionsMenuEntries;
-import main.enums.GameElemMenuEntries;
-import main.computation.RasterManager;
-import main.enums.RasterSizeMenuEntries;
+import main.enums.ActionEnum;
+import main.enums.SymbolEnum;
+import main.enums.RasterEnum;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 /*
@@ -149,13 +140,17 @@ public class CustomController implements Initializable {
     private Text tRBsFound;
 
 
+    private static String SAVEPATH = "/Users/matthiasdaiber/Documents/Universitaet/SS19/code/dataset/tiles/SMB_Lost/";
+    private static String LOADPATH = "/Users/matthiasdaiber/Documents/Universitaet/SS19/images/maps/SMB_AllNightNippon";
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         listOfFiles = new ArrayList<>();
 
         // load Folder with images
-        File folder = new File("/Users/matthiasdaiber/Documents/Universitaet/SS19/images/maps/SMB/valid");
+        //File folder = new File("/Users/matthiasdaiber/Documents/Universitaet/SS19/images/maps/SMB/valid");
+        File folder = new File(LOADPATH);
         File[] tmpFiles = folder.listFiles();
 
         for(File f : tmpFiles)
@@ -195,13 +190,13 @@ public class CustomController implements Initializable {
 
         spLog.getChildren().add(vbLog);
 
-        cbRaster.setItems(FXCollections.observableArrayList(RasterSizeMenuEntries.values()));
+        cbRaster.setItems(FXCollections.observableArrayList(RasterEnum.values()));
         cbRaster.getSelectionModel().selectFirst();
 
-        cbGameElement.setItems(FXCollections.observableArrayList(GameElemMenuEntries.values()));
+        cbGameElement.setItems(FXCollections.observableArrayList(SymbolEnum.values()));
         cbGameElement.getSelectionModel().selectFirst();
 
-        cbAction.setItems(FXCollections.observableArrayList(CharActionsMenuEntries.values()));
+        cbAction.setItems(FXCollections.observableArrayList(ActionEnum.values()));
         cbAction.getSelectionModel().selectFirst();
 
         //tfRaster.setText("10");
@@ -351,11 +346,11 @@ public class CustomController implements Initializable {
         rbX += tmpTileNumber * getRasterSize();
 
         /*
-        if(cbAction.getValue().toString().matches(CharActionsMenuEntries.DELETE.toString()))
+        if(cbAction.getValue().toString().matches(ActionEnum.DELETE.toString()))
         {
             rasterManager.deleteRasterBox(rbX, rbY);
         }
-        else if(cbAction.getValue().toString().matches(CharActionsMenuEntries.ADD.toString()))
+        else if(cbAction.getValue().toString().matches(ActionEnum.ADD.toString()))
         {
             rasterManager.addCharForRasterBox(rbX, rbY, getSemChar());
         }
@@ -367,24 +362,24 @@ public class CustomController implements Initializable {
         drawSemanticMap();
     }
 
-    private GameElemMenuEntries getSemChar()
+    private SymbolEnum getSemChar()
     {
-        GameElemMenuEntries geme = GameElemMenuEntries.BACKGROUND;
+        SymbolEnum geme = SymbolEnum.BACKGROUND;
 
-        if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.INTERACTION.toString()))
-            geme = GameElemMenuEntries.INTERACTION;
-        else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.MOVING_PLATFORM.toString()))
-            geme = GameElemMenuEntries.MOVING_PLATFORM;
-        else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.COLLECTABLE.toString()))
-            geme = GameElemMenuEntries.COLLECTABLE;
-        else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.DISAPPEARING_PLATFORM.toString()))
-            geme = GameElemMenuEntries.DISAPPEARING_PLATFORM;
-        else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.BLOCK.toString()))
-            geme = GameElemMenuEntries.BLOCK;
-        else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.PLATFORM.toString()))
-            geme = GameElemMenuEntries.PLATFORM;
-        else if(cbGameElement.getValue().toString().matches(GameElemMenuEntries.TRAP.toString()))
-            geme = GameElemMenuEntries.TRAP;
+        if(cbGameElement.getValue().toString().matches(SymbolEnum.INTERACTION.toString()))
+            geme = SymbolEnum.INTERACTION;
+        //else if(cbGameElement.getValue().toString().matches(SymbolEnum.MOVING_PLATFORM.toString()))
+        //    geme = SymbolEnum.MOVING_PLATFORM;
+        else if(cbGameElement.getValue().toString().matches(SymbolEnum.COLLECTABLE.toString()))
+            geme = SymbolEnum.COLLECTABLE;
+        else if(cbGameElement.getValue().toString().matches(SymbolEnum.DISAPPEARING_PLATFORM.toString()))
+            geme = SymbolEnum.DISAPPEARING_PLATFORM;
+        else if(cbGameElement.getValue().toString().matches(SymbolEnum.BLOCK.toString()))
+            geme = SymbolEnum.BLOCK;
+        else if(cbGameElement.getValue().toString().matches(SymbolEnum.PLATFORM.toString()))
+            geme = SymbolEnum.PLATFORM;
+        //else if(cbGameElement.getValue().toString().matches(SymbolEnum.TRAP.toString()))
+        //    geme = SymbolEnum.TRAP;
 
         return geme;
     }
@@ -474,7 +469,7 @@ public class CustomController implements Initializable {
         GraphicsContext gcSemMap = cSemMap.getGraphicsContext2D();
         gcSemMap.beginPath();
 
-        GameElemMenuEntries[][] semanticMap = rbManager.getCharMap(tileNumber, rbOffset);
+        SymbolEnum[][] semanticMap = rbManager.getCharMatrix(tileNumber, rbOffset);
 
         // TODO set to getraster
         for(int width = 0; width < semanticMap.length; width++)
@@ -517,7 +512,7 @@ public class CustomController implements Initializable {
         This creates all possible tiles of this map.
          */
 
-        int numTiles = rbManager.getNumRBsWidth() / getRasterSize();
+        int numTiles = rbManager.getMatrixWidth() / getRasterSize();
 
         if(rbManager.getNumRBs() == rbManager.getNumMarkedRBs())
         {
@@ -525,9 +520,9 @@ public class CustomController implements Initializable {
             {
                 for(int t = 0; t < numTiles; t++)
                 {
-                    GameElemMenuEntries[][] geme = rbManager.getCharMap(t, rbo);
+                    SymbolEnum[][] geme = rbManager.getCharMatrix(t, rbo);
 
-                    // System.out.println("bounds are RBs width on map: "+rbManager.getNumRBsWidth()+" and rastersize: "+getRasterSize()+"\n");
+                    // System.out.println("bounds are RBs width on map: "+rbManager.getMatrixWidth()+" and rastersize: "+getRasterSize()+"\n");
 
                     // check if geme is empty -> requested tile window is out of bounds, will not be saved.
                     if(geme.length == 0) {
@@ -544,12 +539,12 @@ public class CustomController implements Initializable {
         }
     }
 
-    private void saveToFile(String tileName, String rbOffset, GameElemMenuEntries[][] charRepresentation) {
+    private void saveToFile(String tileName, String rbOffset, SymbolEnum[][] charRepresentation) {
 
         // cut off file extension
         String fname = imageName.substring(0, imageName.lastIndexOf('.'));
 
-        try (PrintWriter out = new PrintWriter("/Users/matthiasdaiber/Documents/Universitaet/SS19/code/dataset/tiles/SMB/"+fname+"_rs"+getRasterSize()+"tn"+tileName+"rbo"+rbOffset+".txt")) {
+        try (PrintWriter out = new PrintWriter(SAVEPATH+fname+"_rs"+getRasterSize()+"tn"+tileName+"rbo"+rbOffset+".txt")) {
 
             for (int i = 0; i < getRasterSize(); ++i) {
 
@@ -675,19 +670,19 @@ public class CustomController implements Initializable {
         int rasterSize = 0;
 
 
-        if(cbRaster.getValue().toString().matches(RasterSizeMenuEntries.R8x8.toString())) {
+        if(cbRaster.getValue().toString().matches(RasterEnum.R8x8.toString())) {
             rasterSize = 8;
         }
-        else if(cbRaster.getValue().toString().matches(RasterSizeMenuEntries.R14x14.toString())) {
+        else if(cbRaster.getValue().toString().matches(RasterEnum.R14x14.toString())) {
             rasterSize = 14;
         }
-        else if(cbRaster.getValue().toString().matches(RasterSizeMenuEntries.R16x16.toString())) {
+        else if(cbRaster.getValue().toString().matches(RasterEnum.R16x16.toString())) {
             rasterSize = 16;
         }
-        else if(cbRaster.getValue().toString().matches(RasterSizeMenuEntries.R32x32.toString())) {
+        else if(cbRaster.getValue().toString().matches(RasterEnum.R32x32.toString())) {
             rasterSize = 32;
         }
-        else if(cbRaster.getValue().toString().matches(RasterSizeMenuEntries.R64x64.toString())) {
+        else if(cbRaster.getValue().toString().matches(RasterEnum.R64x64.toString())) {
             rasterSize = 64;
         }
 

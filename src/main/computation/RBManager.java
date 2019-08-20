@@ -3,7 +3,8 @@ package main.computation;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
-import main.enums.GameElemMenuEntries;
+import main.enums.SymbolEnum;
+import main.model.RasterBox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,24 +12,27 @@ import java.util.List;
 
 public class RBManager {
 
+    // offset for map
+    private int xOffset;
+    private int yOffset;
+
     private Image map;
+
     private PixelReader pixelReader;
 
-    private int numRBsHeight;
-    private int numRBsWidth;
-    private int tileSideLength;
-    private int rasterBoxSideLength;
+    private int rbLength;
 
-    private int xMapOffset;
-    private int yMapOffset;
+    private int[][] rbMatrix;
+    private int mHeight;
+    private int mWidth;
 
-    private int[][] rasterBoxHashes;
-    private HashMap<Integer, GameElemMenuEntries> rbHashesForChars; // saves Chars-Hashes over all maps during runtime
+
+    private HashMap<Integer, SymbolEnum> rbStorage; // saves Chars-Hashes over all maps during runtime
 
 
     public RBManager() {
-        this.rbHashesForChars = new HashMap<>();
-        this.rasterBoxHashes = new int[0][0]; // init with 0 if getNumRBs is called early
+        this.rbStorage = new HashMap<>();
+        this.rbMatrix = new int[0][0]; // init with 0 if getNumRBs is called early
     }
 
     public void setMap(Image map)
@@ -39,21 +43,21 @@ public class RBManager {
 
     public void setNumRBsHeight(int numRBsHeight)
     {
-        this.numRBsHeight = numRBsHeight;
+        this.mHeight = numRBsHeight;
 
         if(this.map.getHeight() % numRBsHeight != 0)
         {
             System.out.println("Rastersize does not match Imageheight evenly!");
         }
 
-        this.rasterBoxSideLength = (int)(map.getHeight() / numRBsHeight);
-        this.tileSideLength = (int)map.getHeight();
+        this.rbLength = (int)(map.getHeight() / numRBsHeight);
+        //this.tileSideLength = (int)map.getHeight();
     }
 
     public void setMapOffset(int xOff, int yOff)
     {
-        this.xMapOffset = xOff;
-        this.yMapOffset = yOff;
+        this.xOffset = xOff;
+        this.yOffset = yOff;
     }
 
     /*
@@ -62,64 +66,97 @@ public class RBManager {
      */
     public String startAnalyzation()
     {
-        initRasterBoxes();
+        //initRasterBoxes();
+
+        // initialize rasterBoxes
+
+        this.mWidth = (int)(map.getWidth() / rbLength);
+
+        // for the rest of the division above should also be a RB
+        //if(map.getWidth() % rbLength != 0)
+        //    mWidth += 1;
+
+        this.rbMatrix = new int[mWidth][mHeight];
+
+        for(int wBox = 0; wBox < mWidth; wBox++)
+        {
+            for(int hBox = 0; hBox < mHeight; hBox++)
+            {
+                rbMatrix[wBox][hBox] = analyseRasterBox(wBox, hBox);
+            }
+        }
 
         return "Initialised Raster-Map.";
     }
 
-    public void setCharForRB(int widthRB, int heightRB, GameElemMenuEntries geme)
+    public void setCharForRB(int widthRB, int heightRB, SymbolEnum geme)
     {
 
         System.out.println("yRB: "+heightRB+ " xRB: "+widthRB);
 
-        // check if char for this hash already stored
-        if(rbHashesForChars.containsKey(rasterBoxHashes[widthRB][heightRB]))
+        // TODO geändert
+
+        /* check if char for this hash already stored, or put if not
+        if(rbStorage.putIfAbsent(rbMatrix[heightRB][widthRB], geme) != null)
         {
             // check if the given char is not the same as the stored one
-            if(rbHashesForChars.get(rasterBoxHashes[widthRB][heightRB]).getChar() != geme.getChar()) {
-                rbHashesForChars.remove(rasterBoxHashes[widthRB][heightRB]);
-                rbHashesForChars.put(rasterBoxHashes[widthRB][heightRB], geme);
+            if(rbStorage.get(rbMatrix[heightRB][widthRB]).getChar() != geme.getChar()) {
+                //rbStorage.remove(rbMatrix[widthRB][heightRB]);
+                rbStorage.put(rbMatrix[heightRB][widthRB], geme);
+            }
+        }
+        */
+
+        // check if char for this hash already stored
+        if(rbStorage.containsKey(rbMatrix[widthRB][heightRB]))
+        {
+            // check if the given char is not the same as the stored one
+            if(rbStorage.get(rbMatrix[widthRB][heightRB]).getChar() != geme.getChar()) {
+                rbStorage.remove(rbMatrix[widthRB][heightRB]);
+                rbStorage.put(rbMatrix[widthRB][heightRB], geme);
             }
         }
         else
-            rbHashesForChars.put(rasterBoxHashes[widthRB][heightRB], geme);
+            rbStorage.put(rbMatrix[widthRB][heightRB], geme);
     }
 
+    /*
     private void initRasterBoxes()
     {
-        this.numRBsWidth = (int)(map.getWidth() / rasterBoxSideLength);
+        this.mWidth = (int)(map.getWidth() / rbLength);
 
         // for the rest of the division above should also be a RB
-        //if(map.getWidth() % rasterBoxSideLength != 0)
-        //    numRBsWidth += 1;
+        //if(map.getWidth() % rbLength != 0)
+        //    mWidth += 1;
 
-        this.rasterBoxHashes = new int[numRBsWidth][numRBsHeight];
+        this.rbMatrix = new int[mWidth][numRBsHeight];
 
-        for(int wBox = 0; wBox < numRBsWidth; wBox++)
+        for(int wBox = 0; wBox < mWidth; wBox++)
         {
             for(int hBox = 0; hBox < numRBsHeight; hBox++)
             {
-                rasterBoxHashes[wBox][hBox] = analyseRasterBox(wBox, hBox);
+                rbMatrix[wBox][hBox] = analyseRasterBox(wBox, hBox);
             }
         }
     }
+    */
 
     private int analyseRasterBox(int width, int height)
     {
-
-        if(Math.abs(xMapOffset) > rasterBoxSideLength)
+        // this is only a warning
+        if(Math.abs(xOffset) > rbLength)
             System.out.println("x offset is greater than the pixels in a rasterbox!");
 
-        if(Math.abs(yMapOffset) > rasterBoxSideLength)
+        if(Math.abs(yOffset) > rbLength)
             System.out.println("y offset is greater than the pixels in a rasterbox!");
 
-        int wStart = (rasterBoxSideLength * width) - xMapOffset;
-        int wEnd = wStart + rasterBoxSideLength;
+        int wStart = (rbLength * width) - xOffset;
+        int wEnd = wStart + rbLength;
 
-        int hStart = (rasterBoxSideLength * height) - yMapOffset;
-        int hEnd = hStart + rasterBoxSideLength;
+        int hStart = (rbLength * height) - yOffset;
+        int hEnd = hStart + rbLength;
 
-        //System.out.println("yOffset: "+yMapOffset+ " xOffset: "+xMapOffset+" rbslength: "+rasterBoxSideLength);
+        //System.out.println("yOffset: "+yOffset+ " xOffset: "+xOffset+" rbslength: "+rbLength);
         //System.out.println("yStart: "+hStart+ " yEnd: "+hEnd);
         //System.out.println("xStart: "+wStart+ " xEnd: "+wEnd+"\n");
 
@@ -144,37 +181,37 @@ public class RBManager {
                 pixels.add(pixelReader.getColor(readW, readH));
             }
         }
-
         //System.out.println("RB x:"+width+" y:"+height+" has "+pixels.size()+" pixels!");
 
         return new RasterBox(pixels).hashCode();
     }
 
-    public int getNumRBsWidth()
+    public int getMatrixWidth()
     {
-        return numRBsWidth;
+        return mWidth;
     }
 
-    public int getNumRBsHeight()
+    public int getmHeight()
     {
-        return numRBsHeight;
+        return mHeight;
     }
 
     public int getNumRBs()
     {
         // TODO faulty and dangerous if raasterBoxhashes not set
-        return rasterBoxHashes.length * rasterBoxHashes[0].length;
+       // return rbMatrix.length * rbMatrix[0].length;
+        return mWidth * mHeight;
     }
 
     public int getNumMarkedRBs()
     {
         int marked = 0;
 
-        for(int width = 0; width < rasterBoxHashes.length; width++)
+        for(int height = 0; height < mHeight; height++)
         {
-            for(int height = 0; height < rasterBoxHashes[0].length; height++)
+            for(int width = 0; width < mWidth; width++)
             {
-                if(rbHashesForChars.containsKey(rasterBoxHashes[width][height]))
+                if(rbStorage.containsKey(rbMatrix[width][height]))
                     marked++;
             }
         }
@@ -183,33 +220,34 @@ public class RBManager {
     }
 
     // returns geme with length 0 if requested tile-window is out of bounds from map
-    public GameElemMenuEntries[][] getCharMap(int tileNumber, int rbOffset)
+    public SymbolEnum[][] getCharMatrix(int tileNumber, int rbOffset)
     {
-        GameElemMenuEntries[][] gemes = new GameElemMenuEntries[numRBsHeight][numRBsHeight];
+        SymbolEnum[][] gemes = new SymbolEnum[mHeight][mHeight];
 
         // check if tile raster is out of range
-        if((tileNumber * numRBsHeight) + rbOffset + numRBsHeight > numRBsWidth)
+        if((tileNumber * mHeight) + rbOffset + mHeight > mWidth)
             System.out.println("Requested Raster window is out of bounds!");
         else
         {
-            int startWidth = (tileNumber * numRBsHeight) + rbOffset;
-            int endWidth = startWidth + numRBsHeight;
+            int startWidth = (tileNumber * mHeight) + rbOffset;
+            int endWidth = startWidth + mHeight;
 
-            for(int heigth = 0; heigth < numRBsHeight; heigth++) {
-
+            for(int heigth = 0; heigth < mHeight; heigth++)
+            {
                 int tmpWidth = 0;
                 for (int width = startWidth; width < endWidth; width++)
                 {
-                    gemes[tmpWidth][heigth] = rbHashesForChars.get(rasterBoxHashes[width][heigth]);
+                    gemes[tmpWidth][heigth] = rbStorage.get(rbMatrix[width][heigth]);
                     tmpWidth++;
                 }
             }
+
 
             //System.out.println("Returns geme for tile: "+tileNumber+" rbo: "+rbOffset);
             return gemes;
         }
 
         System.out.println("Returns null for tile: "+tileNumber+" rbo: "+rbOffset);
-        return new GameElemMenuEntries[0][0];
+        return new SymbolEnum[0][0];
     }
  }

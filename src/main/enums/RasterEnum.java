@@ -1,7 +1,7 @@
 package main.enums;
 
 
-public enum RasterSizeMenuEntries {
+public enum RasterEnum {
 
     R8x8("8x8", 8),
     R14x14("14x14", 14),
@@ -12,10 +12,10 @@ public enum RasterSizeMenuEntries {
     private final String name;
     private final int raster;
 
-    RasterSizeMenuEntries(String s, int r) {
+    RasterEnum(String s, int r) {
 
-        name = s;
-        raster = r;
+        this.name = s;
+        this.raster = r;
     }
 
     public String toString() {

@@ -1,4 +1,4 @@
-package main.computation;
+package main.model;
 
 import java.util.Objects;
 
@@ -39,6 +39,7 @@ public class Pixel {
         this.blue = blue;
     }
 
+    @Override
     public int hashCode()
     {
         return Objects.hash(this.red, this.green, this.blue);
