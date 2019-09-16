@@ -10,12 +10,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        BorderPane root = FXMLLoader.load(getClass().getResource("/main/resources/layout.fxml"));
+        BorderPane root = FXMLLoader.load(getClass().getResource("/main/resources/Layout.fxml"));
 
         primaryStage.setTitle("Architecture Analyser");
 
         Scene scene = new Scene(root, 1600, 1200);
-        scene.getStylesheets().add(getClass().getResource("/main/resources/styling.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/main/resources/Styling.css").toExternalForm());
 
         primaryStage.setScene(scene);
         primaryStage.sizeToScene();

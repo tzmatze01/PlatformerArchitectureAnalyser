@@ -28,19 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-/*
-TODO register mouse pressed - felder schneller ausmalen
-TODO canvas mit map auch anmalen
-TODO autovervollständigung an und ausschaltbar
 
-TODO buttons um bild zu verschieben
-
-
- */
 public class CustomController implements Initializable {
 
-    private int horizontalImageOffset = 0;
-    private int verticalImageOffset = 0;
+    private int horizImgOffset = 0;
+    private int vertImgOffset = 0;
 
     private final int RESIZE_FACTOR = 3; // resizes image ! is also used in calculation for offset et al.
 
@@ -49,7 +41,7 @@ public class CustomController implements Initializable {
     private double rbSideLength;
     private int rbOffset;
 
-    private List<File> listOfFiles;
+    private List<File> maps;
     private int currFileIndex;
 
     private Image currImage;
@@ -146,7 +138,7 @@ public class CustomController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        listOfFiles = new ArrayList<>();
+        maps = new ArrayList<>();
 
         // load Folder with images
         //File folder = new File("/Users/matthiasdaiber/Documents/Universitaet/SS19/images/maps/SMB/valid");
@@ -156,7 +148,7 @@ public class CustomController implements Initializable {
         for(File f : tmpFiles)
         {
             if(f.getName().contains(".png") || f.getName().contains(".jpg") || f.getName().contains(".jpeg"))
-                listOfFiles.add(f);
+                maps.add(f);
         }
         currFileIndex = 0;
 
@@ -199,65 +191,56 @@ public class CustomController implements Initializable {
         cbAction.setItems(FXCollections.observableArrayList(ActionEnum.values()));
         cbAction.getSelectionModel().selectFirst();
 
-        //tfRaster.setText("10");
-        //drawRaster();
 
-        //rasterManager = new RasterManager(getRasterSize());
         rbManager = new RBManager();
     }
 
     @FXML
     private void moveImageUp()
     {
-        verticalImageOffset -= RESIZE_FACTOR;
+        vertImgOffset -= RESIZE_FACTOR;
         loadTile();
-        rbManager.setMapOffset(horizontalImageOffset / RESIZE_FACTOR, verticalImageOffset / RESIZE_FACTOR);
     }
 
     @FXML
     private void moveImageDown()
     {
-        verticalImageOffset += RESIZE_FACTOR;
+        vertImgOffset += RESIZE_FACTOR;
         loadTile();
-        rbManager.setMapOffset(horizontalImageOffset / RESIZE_FACTOR, verticalImageOffset / RESIZE_FACTOR);
     }
 
     @FXML
     private void moveImageLeft()
     {
-        horizontalImageOffset += RESIZE_FACTOR;
+        horizImgOffset += RESIZE_FACTOR;
         loadTile();
-        rbManager.setMapOffset(horizontalImageOffset / RESIZE_FACTOR, verticalImageOffset / RESIZE_FACTOR);
     }
 
     @FXML
     private void moveImageRight()
     {
-        horizontalImageOffset -= RESIZE_FACTOR;
+        horizImgOffset -= RESIZE_FACTOR;
         loadTile();
-        rbManager.setMapOffset(horizontalImageOffset / RESIZE_FACTOR, verticalImageOffset / RESIZE_FACTOR);
     }
 
 
     @FXML
     private void loadNextImage()
     {
-        // TODO check if file or dir
-        //currImage = new Image(getClass().getResource("../../maps/test.png").toExternalForm());
-        System.out.println("path: "+listOfFiles.get(currFileIndex).getAbsolutePath());
-        currImage = new Image(listOfFiles.get(currFileIndex).toURI().toString());
+        System.out.println("path: "+ maps.get(currFileIndex).getAbsolutePath());
+        currImage = new Image(maps.get(currFileIndex).toURI().toString());
 
         imageHeight = (int) currImage.getHeight();
 
-        imageName = listOfFiles.get(currFileIndex).getName();
+        imageName = maps.get(currFileIndex).getName();
 
         tLog.setFill(Color.BLACK);
         tLog.setText("Loaded "+imageName);
 
-        rbManager.setMap(currImage);
+        rbManager.setMap(currImage, getRasterSize(), horizImgOffset / RESIZE_FACTOR, vertImgOffset / RESIZE_FACTOR);
 
         ++currFileIndex;
-        if(currFileIndex >= listOfFiles.size()) {
+        if(currFileIndex >= maps.size()) {
 
             tLog.setFill(Color.RED);
             tLog.setText("Loaded last image "+imageName);
@@ -265,7 +248,6 @@ public class CustomController implements Initializable {
             currFileIndex = 0;
         }
 
-        // canvases need to be initiaised for every new iage, to fit proportions of img
         initCanvases();
 
         loadFirstTile();
@@ -323,40 +305,18 @@ public class CustomController implements Initializable {
     private void identifyRasterBox(double x, double y)
     {
 
-        // TODO calc in tilenumber for RBManager
-        // TODO + RB offset
-
         int tmpTileNumber = tileNumber;
 
         double rasterBoxSide = cMap.getHeight() / getRasterSize();
         int rbX = (int ) (x / rasterBoxSide);
         int rbY = (int ) (y / rasterBoxSide);
 
-        /*
-        Not needed, because next calculation does the same if rbOffset > getRasterSize()
-        this might cause problems with loadPreviousTile ?
-
-        if(rbX + rbOffset > getRasterSize())
-            tmpTileNumber++;
-        else
-            rbX += rbOffset;
-        */
 
         rbX += rbOffset;
         rbX += tmpTileNumber * getRasterSize();
 
-        /*
-        if(cbAction.getValue().toString().matches(ActionEnum.DELETE.toString()))
-        {
-            rasterManager.deleteRasterBox(rbX, rbY);
-        }
-        else if(cbAction.getValue().toString().matches(ActionEnum.ADD.toString()))
-        {
-            rasterManager.addCharForRasterBox(rbX, rbY, getSemChar());
-        }
-        */
 
-        rbManager.setCharForRB(rbX, rbY, getSemChar());
+        rbManager.addMapping(rbX, rbY, getSemChar());
 
         drawRaster();
         drawSemanticMap();
@@ -392,6 +352,7 @@ public class CustomController implements Initializable {
     @FXML
     private void startAnalyzing()
     {
+        rbManager.setMap(currImage, getRasterSize(), horizImgOffset / RESIZE_FACTOR, vertImgOffset / RESIZE_FACTOR);
         String mssg = rbManager.startAnalyzation();
 
         tLog.setText(mssg);
@@ -452,7 +413,7 @@ public class CustomController implements Initializable {
 
             GraphicsContext gMap = cMap.getGraphicsContext2D();
             gMap.clearRect(0,0, currImageSideLength, currImageSideLength);
-            gMap.drawImage(croppedImg, 0,0, imageHeight, imageHeight, horizontalImageOffset, verticalImageOffset, currImageSideLength, currImageSideLength);
+            gMap.drawImage(croppedImg, 0,0, imageHeight, imageHeight, horizImgOffset, vertImgOffset, currImageSideLength, currImageSideLength);
 
 
             drawRaster();
@@ -464,14 +425,12 @@ public class CustomController implements Initializable {
 
     private void drawSemanticMap()
     {
-        // TODO char size relativ to rastersize
 
         GraphicsContext gcSemMap = cSemMap.getGraphicsContext2D();
         gcSemMap.beginPath();
 
         SymbolEnum[][] semanticMap = rbManager.getCharMatrix(tileNumber, rbOffset);
 
-        // TODO set to getraster
         for(int width = 0; width < semanticMap.length; width++)
         {
             for(int height = 0; height < semanticMap.length; height++)
@@ -514,22 +473,19 @@ public class CustomController implements Initializable {
 
         int numTiles = rbManager.getMatrixWidth() / getRasterSize();
 
-        if(rbManager.getNumRBs() == rbManager.getNumMarkedRBs())
-        {
-            for(int rbo = 0; rbo < getRasterSize(); rbo++)
-            {
-                for(int t = 0; t < numTiles; t++)
-                {
-                    SymbolEnum[][] geme = rbManager.getCharMatrix(t, rbo);
+        if(rbManager.getNumRBs() == rbManager.getNumMarkedRBs()) {
+            for(int rbo = 0; rbo < getRasterSize(); rbo++) {
+                for(int t = 0; t < numTiles; t++) {
+                    SymbolEnum[][] symbols = rbManager.getCharMatrix(t, rbo);
 
                     // System.out.println("bounds are RBs width on map: "+rbManager.getMatrixWidth()+" and rastersize: "+getRasterSize()+"\n");
 
                     // check if geme is empty -> requested tile window is out of bounds, will not be saved.
-                    if(geme.length == 0) {
+                    if(symbols.length == 0) {
                         System.out.println("requested window for tile: " + t + " with rbOffset: " + rbo + " is out of map bounds.");
                     }
                     else
-                        saveToFile(""+t, ""+rbo, geme);
+                        saveToFile(""+t, ""+rbo, symbols);
                 }
             }
         }
@@ -564,30 +520,16 @@ public class CustomController implements Initializable {
     @FXML
     private void changeRaster()
     {
-        
-            rbSideLength = cMap.getHeight() / getRasterSize();
-            //rasterManager.setRasterSize(getRasterSize());
-            rbManager.setNumRBsHeight(getRasterSize());
-            drawRaster();
 
-        // TODO call nextrasterbox?
+        rbSideLength = cMap.getHeight() / getRasterSize();
+        drawRaster();
+
     }
 
     @FXML
     private void nextRasterBox()
     {
-        /*
-        TODO
 
-        rbOffset++;
-        if(rbOffset >= getRasterSize())
-            rbOffset = 0;
-
-        loadTile()
-
-
-         */
-        //if((rbOffset + 1) * rbSideLength > imageHeight)
         if(rbOffset >= getRasterSize()) {
             rbOffset = 0;
         }
@@ -611,15 +553,11 @@ public class CustomController implements Initializable {
 
     private void drawRaster()
     {
-        //if(ivMap.getImage() != null) {
+
 
             GraphicsContext gcMap = cMap.getGraphicsContext2D();
             GraphicsContext gcSemMap = cSemMap.getGraphicsContext2D();
 
-
-            // gcMap.clearRect(0,0, cMap.getWidth(), cMap.getHeight());
-            // gcSemMap.clearRect(0,0, cSemMap.getWidth(), cSemMap.getWidth());
-            //gcMap.clearRect(0,0, currImageSideLength, currImageSideLength);
             gcSemMap.clearRect(0,0, currImageSideLength, currImageSideLength);
 
 
@@ -663,7 +601,7 @@ public class CustomController implements Initializable {
 
             gcMap.closePath();
             gcSemMap.closePath();
-        //}
+
     }
 
     public int getRasterSize()

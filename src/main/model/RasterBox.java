@@ -26,14 +26,7 @@ public class RasterBox {
 
             if(pixels.putIfAbsent(p.hashCode(), 1) != null)
                 pixels.put(p.hashCode(), pixels.get(p.hashCode()) + 1);
-            /*
-            if(pixels.keySet().contains(p.hashCode())) {
-                int value = pixels.get(p.hashCode());
-                pixels.put(p.hashCode(), value + 1);
-            }
-            else
-                pixels.put(p.hashCode(), 1);
-                */
+
         }
     }
 
